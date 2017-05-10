@@ -1,2 +1,4 @@
 example/terraform.tfvars
 .idea
+*.tfstate
+*.tfstate.backup

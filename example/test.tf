@@ -8,7 +8,7 @@ provider "runscope" {
 # Create a bucket
 resource "runscope_bucket" "main" {
   name         = "terraform-ftw"
-  team_uuid    = "${var.team_uuid}}"
+  team_uuid    = "${var.team_uuid}"
 }
 
 # Create a test in the bucket

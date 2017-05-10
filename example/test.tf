@@ -14,6 +14,10 @@ resource "runscope_bucket" "main" {
 # Create a test in the bucket
 resource "runscope_test" "api" {
   name         = "api-test"
-  description  = "checks the api is up and running"
+  description  = "zzchecks the api is up and running"
   bucket_id    = "${runscope_bucket.main.id}"
+}
+
+output "bucket_url"  {
+  value = "https://runscope.com/radar/${runscope_bucket.main.id}"
 }

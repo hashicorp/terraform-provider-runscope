@@ -2,3 +2,4 @@ example/terraform.tfvars
 .idea
 *.tfstate
 *.tfstate.backup
+terraform-provider-runscope

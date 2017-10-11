@@ -5,6 +5,12 @@ provider "runscope" {
   access_token = "${var.access_token}"
 }
 
+resource "runscope_environment" "main" {
+  bucket_id    = "${runscope_bucket.main.id}"
+  name         = "shared-environment"
+  regions      = ["us1", "eu1"]
+}
+
 # Create a bucket
 resource "runscope_bucket" "main" {
   name         = "terraform-ftw"

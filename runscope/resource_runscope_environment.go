@@ -67,6 +67,11 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				},
 				Optional: true,
 			},
+			"regions": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 		},
 	}
 }
@@ -85,6 +90,7 @@ func resourceEnvironmentCreate(d *schema.ResourceData, meta interface{}) error {
 
 	var createdEnvironment *runscope.Environment
 	bucketId := d.Get("bucket_id").(string)
+
 	if testId, ok := d.GetOk("test_id"); ok {
 		createdEnvironment, err = client.CreateTestEnvironment(environment,
 			&runscope.Test{ID: testId.(string), Bucket: &runscope.Bucket{Key: bucketId}})
@@ -238,6 +244,18 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 		}
 
 		environment.Integrations = integrations
+	}
+
+
+	if attr, ok := d.GetOk("regions"); ok {
+		regions := []string{}
+		items := attr.([]interface{})
+		for _, x := range items {
+			item := x.(string)
+			regions = append(regions, item)
+		}
+
+		environment.Regions = regions
 	}
 
 	return environment, nil

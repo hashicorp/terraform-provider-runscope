@@ -99,6 +99,18 @@ func testAccCheckEnvironmentExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Expected %d integrations, actual %d", 1, len(environment.Integrations))
 		}
 
+		if len(foundRecord.Regions) != 2 {
+			return fmt.Errorf("Expected %d regions, actual %d", 2, len(environment.Regions))
+		}
+
+		if (foundRecord.Regions[0] != "us1") {
+			return fmt.Errorf("Expected %s, actual %s", "us1", environment.Regions[0])
+		}
+
+		if (foundRecord.Regions[1] != "eu1") {
+			return fmt.Errorf("Expected %s, actual %s", "eu1", environment.Regions[1])
+		}
+
 		return nil
 	}
 }
@@ -119,6 +131,8 @@ resource "runscope_environment" "environment" {
     var1 = "true",
     var2 = "value2"
   }
+
+  regions = ["us1", "eu1"]
 }
 
 resource "runscope_test" "test" {

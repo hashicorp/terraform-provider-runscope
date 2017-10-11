@@ -246,7 +246,6 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 		environment.Integrations = integrations
 	}
 
-
 	if attr, ok := d.GetOk("regions"); ok {
 		regions := []string{}
 		items := attr.([]interface{})

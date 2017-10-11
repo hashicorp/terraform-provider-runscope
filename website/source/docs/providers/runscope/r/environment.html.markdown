@@ -18,6 +18,9 @@ that you'd like to use across all tests within a bucket,
 use a [Shared Environment](https://www.runscope.com/docs/api-testing/environments#shared).
 
 ### Creating a shared environment
+
+> Note: to create a shared environment you do not include a `test_id`
+
 ```hcl
 resource "runscope_environment" "environment" {
   bucket_id    = "${runscope_bucket.bucket.id}"
@@ -42,6 +45,9 @@ data "runscope_integration" "pagerduty" {
 }
 ```
 ### Creating a test environment
+
+> Note: to create an environment specific to a test include the associated `test_id`
+
 ```hcl
 resource "runscope_environment" "environment" {
   bucket_id    = "${runscope_bucket.bucket.id}"
@@ -94,6 +100,7 @@ to to run to setup the environment
 * `initial_variables` - (Optional) Map of keys and values being used for variables when the test begins.
 * `integrations` - (Optional) A list of integrations to enable for test runs using this environment.
 Integrations documented below.
+* `regions` - (Optional) A list of [Runscope regions](https://www.runscope.com/docs/regions) to execute test runs in when using this environment.
 
 Integrations (`integrations`) supports the following:
 

@@ -1,5 +1,7 @@
-example/terraform.tfvars
+terraform.tfvars
 .idea
 *.tfstate
 *.tfstate.backup
 terraform-provider-runscope
+pkg
+.terraform

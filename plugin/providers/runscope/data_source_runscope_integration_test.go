@@ -36,7 +36,7 @@ func testAccDataSourceRunscopeIntegration(dataSource string) resource.TestCheckF
 			return fmt.Errorf("Expected to get an integration ID from runscope data resource")
 		}
 
-		if a["type"] != "pagerduty" {
+		if a["type"] != "slack" {
 			return fmt.Errorf("Expected to get an integration type pagerduty from runscope data resource")
 		}
 
@@ -47,6 +47,6 @@ func testAccDataSourceRunscopeIntegration(dataSource string) resource.TestCheckF
 const testAccDataSourceRunscopeIntegrationConfig = `
 data "runscope_integration" "by_type" {
 	team_uuid = "%s"
-	type      = "pagerduty"
+	type      = "slack"
 }
 `

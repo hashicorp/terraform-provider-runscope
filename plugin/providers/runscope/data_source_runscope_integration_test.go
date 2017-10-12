@@ -37,7 +37,7 @@ func testAccDataSourceRunscopeIntegration(dataSource string) resource.TestCheckF
 		}
 
 		if a["type"] != "slack" {
-			return fmt.Errorf("Expected to get an integration type pagerduty from runscope data resource")
+			return fmt.Errorf("Expected to get an integration type slack from runscope data resource")
 		}
 
 		return nil

@@ -101,12 +101,19 @@ to to run to setup the environment
 * `integrations` - (Optional) A list of integrations to enable for test runs using this environment.
 Integrations documented below.
 * `regions` - (Optional) A list of [Runscope regions](https://www.runscope.com/docs/regions) to execute test runs in when using this environment.
+* `remote_agents` - (Optional) A list of [Remote Agents](https://www.runscope.com/docs/api/agents) to execute test runs in when using this environment.
+Remote Agents documented below.
 
 Integrations (`integrations`) supports the following:
 
 * `id` - (Required) The id of the integration to enable.
 Look the values up using the [runscope_integration](../d/integration.html) data resource.
 * `integration_type` - (Required) The type of integration to enable
+
+Remote Agents (`remote_agents`) supports the following:
+
+* `name` - (Required) The name of the remote agent
+* `uuid` - (Required) The uuid of the remote agent
 
 ## Attributes Reference
 

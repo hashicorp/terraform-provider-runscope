@@ -73,7 +73,7 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"remote_agents": &schema.Schema{
-				Type:     schema.TypeList,
+				Type: schema.TypeList,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": &schema.Schema{
@@ -285,7 +285,7 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 
 			remote_agents = append(remote_agents, &remote_agent)
 		}
-		
+
 		environment.RemoteAgents = remote_agents
 	}
 

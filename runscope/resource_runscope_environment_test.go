@@ -132,7 +132,14 @@ resource "runscope_environment" "environment" {
     var2 = "value2"
   }
 
-  regions = ["us1", "eu1"]
+	regions = ["us1", "eu1"]
+	
+	remote_agents = [
+		{
+			name = "test agent"
+			uuid = "arbitrary-string"
+		}
+	]
 }
 
 resource "runscope_test" "test" {

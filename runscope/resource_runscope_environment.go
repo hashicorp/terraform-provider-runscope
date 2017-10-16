@@ -72,6 +72,22 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"remote_agents": &schema.Schema{
+				Type:     schema.TypeList,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"uuid": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
+				Optional: true,
+			},
 		},
 	}
 }
@@ -255,6 +271,22 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 		}
 
 		environment.Regions = regions
+	}
+
+	if attr, ok := d.GetOk("remote_agents"); ok {
+		remote_agents := []*runscope.LocalMachine{}
+		items := attr.([]interface{})
+		for _, x := range items {
+			item := x.(map[string]interface{})
+			remote_agent := runscope.LocalMachine{
+				Name: item["name"].(string),
+				UUID: item["uuid"].(string),
+			}
+
+			remote_agents = append(remote_agents, &remote_agent)
+		}
+		
+		environment.RemoteAgents = remote_agents
 	}
 
 	return environment, nil

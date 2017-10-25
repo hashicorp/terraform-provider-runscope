@@ -16,6 +16,8 @@ func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testI
 		return nil, error
 	}
 
+	client.Lock()
+	defer client.Unlock()
 	newResource, error := client.createResource(testStep, "test step", testStep.ID,
 		fmt.Sprintf("/buckets/%s/tests/%s/steps", bucketKey, testID))
 	if error != nil {

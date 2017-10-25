@@ -169,12 +169,12 @@ func resourceEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if d.HasChange("name") ||
-	d.HasChange("script") ||
-	d.HasChange("preserve_cookies") ||
-	d.HasChange("initial_variables") ||
-	d.HasChange("integrations") ||
-	d.HasChange("regions") ||
-	d.HasChange("remote_agents") {
+		d.HasChange("script") ||
+		d.HasChange("preserve_cookies") ||
+		d.HasChange("initial_variables") ||
+		d.HasChange("integrations") ||
+		d.HasChange("regions") ||
+		d.HasChange("remote_agents") {
 		client := meta.(*runscope.Client)
 		bucketId := d.Get("bucket_id").(string)
 		if testId, ok := d.GetOk("test_id"); ok {

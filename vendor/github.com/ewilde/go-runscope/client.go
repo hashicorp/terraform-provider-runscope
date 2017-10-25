@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"log"
 	"strings"
+	"sync"
 )
 
 // APIURL is the default runscope api uri
@@ -22,6 +23,7 @@ type Client struct {
 	APIURL      string
 	AccessToken string
 	HTTP        *http.Client
+	sync.Mutex
 }
 
 // Team to which buckets belong to

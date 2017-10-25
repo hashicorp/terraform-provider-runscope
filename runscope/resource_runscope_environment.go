@@ -168,8 +168,13 @@ func resourceEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error updating environment: %s", err)
 	}
 
-	change := d.HasChange("name")
-	if change {
+	if d.HasChange("name") ||
+		d.HasChange("script") ||
+		d.HasChange("preserve_cookies") ||
+		d.HasChange("initial_variables") ||
+		d.HasChange("integrations") ||
+		d.HasChange("regions") ||
+		d.HasChange("remote_agents") {
 		client := meta.(*runscope.Client)
 		bucketId := d.Get("bucket_id").(string)
 		if testId, ok := d.GetOk("test_id"); ok {

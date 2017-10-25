@@ -20,6 +20,10 @@ func dataSourceRunscopeIntegration() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"description": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -45,12 +49,13 @@ func dataSourceRunscopeIntegrationRead(d *schema.ResourceData, meta interface{})
 	}
 
 	if found == nil {
-		return fmt.Errorf("Unable to locate any user with the email: %s", searchType)
+		return fmt.Errorf("Unable to locate any integrations with the type: %s", searchType)
 	}
 
 	d.SetId(found.ID)
 	d.Set("id", found.ID)
 	d.Set("type", found.IntegrationType)
+	d.Set("description", found.Description)
 
 	return nil
 }

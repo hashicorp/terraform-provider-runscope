@@ -40,6 +40,10 @@ func testAccDataSourceRunscopeIntegration(dataSource string) resource.TestCheckF
 			return fmt.Errorf("Expected to get an integration type slack from runscope data resource")
 		}
 
+		if a["description"] == "" {
+			return fmt.Errorf("Expected to get an integration description from runscope data resource")
+		}
+
 		return nil
 	}
 }

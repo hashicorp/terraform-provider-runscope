@@ -1,6 +1,6 @@
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 
-default: build
+default: build test testacc
 
 test: fmtcheck
 	go test -v . ./plugin/providers/runscope

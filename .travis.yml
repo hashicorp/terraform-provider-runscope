@@ -5,7 +5,7 @@ script:
 - make
 env:
   global:
-  - "RUNSCOPE_INTEGRATION_DESC=Slack: #general channel, send message on all test runs"
+  - RUNSCOPE_INTEGRATION_DESC='Slack: #general channel, send message on all test runs'
   - DEBUG=1
   - TF_LOG=DEBUG
   - TF_ACC=1

@@ -63,7 +63,7 @@ func dataSourceRunscopeIntegrationRead(d *schema.ResourceData, meta interface{})
 	for _, integration := range resp {
 		if integration.IntegrationType == searchType {
 			if filtersOk {
-				if(!integrationFiltersTest(integration, filters.(*schema.Set))){
+				if !integrationFiltersTest(integration, filters.(*schema.Set)) {
 					continue
 				}
 			}
@@ -90,9 +90,18 @@ func integrationFiltersTest(integration *runscope.Integration, filters *schema.S
 
 		for _, e := range m["values"].([]interface{}) {
 			switch m["name"].(string) {
-			case "id": if(integration.ID == e){ return true }
-			case "type": if(integration.IntegrationType == e){ return true }
-			default: if(integration.Description == e){ return true }
+			case "id":
+				if integration.ID == e {
+					return true
+				}
+			case "type":
+				if integration.IntegrationType == e {
+					return true
+				}
+			default:
+				if integration.Description == e {
+					return true
+				}
 			}
 		}
 	}

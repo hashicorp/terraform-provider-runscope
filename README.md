@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ewilde/terraform-provider-runscope.svg?branch=master)](https://travis-ci.org/ewilde/terraform-provider-runscope)
+
 # Terraform Runscope Provider
 
 - Website: https://www.terraform.io

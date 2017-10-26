@@ -16,6 +16,24 @@ func dataSourceRunscopeIntegration() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"filter": &schema.Schema{
+				Type:     schema.TypeSet,
+				Optional: true,
+				ForceNew: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"values": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+						},
+					},
+				},
+			},
 			"type": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -34,6 +52,7 @@ func dataSourceRunscopeIntegrationRead(d *schema.ResourceData, meta interface{})
 	log.Printf("[INFO] Reading Runscope integration")
 
 	searchType := d.Get("type").(string)
+	filters, filtersOk := d.GetOk("filter")
 
 	resp, err := client.ListIntegrations(d.Get("team_uuid").(string))
 	if err != nil {
@@ -43,6 +62,11 @@ func dataSourceRunscopeIntegrationRead(d *schema.ResourceData, meta interface{})
 	found := &runscope.Integration{}
 	for _, integration := range resp {
 		if integration.IntegrationType == searchType {
+			if filtersOk {
+				if(!integrationFiltersTest(integration, filters.(*schema.Set))){
+					continue
+				}
+			}
 			found = integration
 			break
 		}
@@ -58,4 +82,19 @@ func dataSourceRunscopeIntegrationRead(d *schema.ResourceData, meta interface{})
 	d.Set("description", found.Description)
 
 	return nil
+}
+
+func integrationFiltersTest(integration *runscope.Integration, filters *schema.Set) bool {
+	for _, v := range filters.List() {
+		m := v.(map[string]interface{})
+
+		for _, e := range m["values"].([]interface{}) {
+			switch m["name"].(string) {
+			case "id": if(integration.ID == e){ return true }
+			case "type": if(integration.IntegrationType == e){ return true }
+			default: if(integration.Description == e){ return true }
+			}
+		}
+	}
+	return false
 }

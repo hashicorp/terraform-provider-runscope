@@ -58,7 +58,10 @@ data "runscope_integration" "by_type" {
 func TestAccDataSourceRunscopeIntegration_Filter(t *testing.T) {
 
 	teamId := os.Getenv("RUNSCOPE_TEAM_ID")
-	integrationDesc := os.Getenv("RUNSCOPE_INTEGRATION_DESC")
+	var integrationDesc = os.Getenv("RUNSCOPE_INTEGRATION_DESC")
+	if integrationDesc == "" {
+		t.Fatal("RUNSCOPE_INTEGRATION_DESC must be set for this acceptance tests")
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -76,12 +79,17 @@ func TestAccDataSourceRunscopeIntegration_Filter(t *testing.T) {
 
 func testAccDataSourceRunscopeIntegrationFilter(dataSource string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		r := s.RootModule().Resources[dataSource]
-		a := r.Primary.Attributes
 		integrationDesc := os.Getenv("RUNSCOPE_INTEGRATION_DESC")
 
+		r := s.RootModule().Resources[dataSource]
+		if r == nil {
+			return fmt.Errorf("expected integration description to be %s, actual nil", integrationDesc)
+		}
+
+		a := r.Primary.Attributes
+
 		if a["description"] != integrationDesc {
-			return fmt.Errorf("Expected integration description %s to be %s", a["description"], integrationDesc)
+			return fmt.Errorf("expected integration description %s to be %s", a["description"], integrationDesc)
 		}
 
 		return nil

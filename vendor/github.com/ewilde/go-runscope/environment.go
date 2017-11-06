@@ -87,16 +87,10 @@ func (client *Client) UpdateTestEnvironment(environment *Environment, test *Test
 		fmt.Sprintf("/buckets/%s/tests/%s/environments/%s", test.Bucket.Key, test.ID, environment.ID))
 }
 
-// DeleteSharedEnvironment deletes an existing shared environment. https://www.runscope.com/docs/api/environments#delete
-func (client *Client) DeleteSharedEnvironment(environment *Environment, bucket *Bucket) error {
+// DeleteEnvironment deletes an existing shared environment. https://www.runscope.com/docs/api/environments#delete
+func (client *Client) DeleteEnvironment(environment *Environment, bucket *Bucket) error {
 	return client.deleteResource("environment", environment.ID,
 		fmt.Sprintf("/buckets/%s/environments/%s", bucket.Key, environment.ID))
-}
-
-// DeleteTestEnvironment deletes an existing test environment. https://www.runscope.com/docs/api/environments#delete
-func (client *Client) DeleteTestEnvironment(environment *Environment, test *Test) error {
-	return client.deleteResource("environment", environment.ID,
-		fmt.Sprintf("/buckets/%s/environments/%s/tests/%s", test.Bucket.Key, test.ID, environment.ID))
 }
 
 func (environment *Environment) String() string {

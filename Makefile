@@ -14,7 +14,7 @@ testacc: fmtcheck
 build: fmtcheck vet testacc
 	@go install
 	@mkdir -p ~/.terraform.d/plugins/
-	@cp $(GOPATH)/bin/terraform-provider-runscope ~/.terraform.d/plugins/
+	@cp $(GOPATH)/bin/terraform-provider-runscope ~/.terraform.d/plugins/terraform-provider-runscope
 	@echo "Build succeeded"
 
 build-gox: deps fmtcheck vet

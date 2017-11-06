@@ -204,12 +204,12 @@ func resourceEnvironmentDelete(d *schema.ResourceData, meta interface{}) error {
 	if testId, ok := d.GetOk("test_id"); ok {
 		log.Printf("[INFO] Deleting test environment with id: %s name: %s, from test %s",
 			environmentFromResource.ID, environmentFromResource.Name, testId.(string))
-		err = client.DeleteTestEnvironment(
-			environmentFromResource, &runscope.Test{ID: testId.(string), Bucket: &runscope.Bucket{Key: bucketId}})
+		err = client.DeleteEnvironment(
+			environmentFromResource, &runscope.Bucket{Key: bucketId})
 	} else {
 		log.Printf("[INFO] Deleting shared environment with id: %s name: %s",
 			environmentFromResource.ID, environmentFromResource.Name)
-		err = client.DeleteSharedEnvironment(
+		err = client.DeleteEnvironment(
 			environmentFromResource, &runscope.Bucket{Key: bucketId})
 	}
 

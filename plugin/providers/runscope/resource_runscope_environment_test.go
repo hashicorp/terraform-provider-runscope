@@ -39,12 +39,10 @@ func testAccCheckEnvironmentDestroy(s *terraform.State) error {
 		bucketId := rs.Primary.Attributes["bucket_id"]
 		testId := rs.Primary.Attributes["test_id"]
 		if testId != "" {
-			err = client.DeleteTestEnvironment(&runscope.Environment{ID: rs.Primary.ID},
-				&runscope.Test{
-					ID:     testId,
-					Bucket: &runscope.Bucket{Key: bucketId}})
+			err = client.DeleteEnvironment(&runscope.Environment{ID: rs.Primary.ID},
+				&runscope.Bucket{Key: bucketId})
 		} else {
-			err = client.DeleteSharedEnvironment(&runscope.Environment{ID: rs.Primary.ID},
+			err = client.DeleteEnvironment(&runscope.Environment{ID: rs.Primary.ID},
 				&runscope.Bucket{Key: bucketId})
 		}
 

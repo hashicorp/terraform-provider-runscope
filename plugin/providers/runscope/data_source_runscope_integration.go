@@ -87,23 +87,31 @@ func dataSourceRunscopeIntegrationRead(d *schema.ResourceData, meta interface{})
 func integrationFiltersTest(integration *runscope.Integration, filters *schema.Set) bool {
 	for _, v := range filters.List() {
 		m := v.(map[string]interface{})
+		passed := false
 
 		for _, e := range m["values"].([]interface{}) {
 			switch m["name"].(string) {
 			case "id":
 				if integration.ID == e {
-					return true
+					passed = true
 				}
 			case "type":
 				if integration.IntegrationType == e {
-					return true
+					passed = true
 				}
 			default:
 				if integration.Description == e {
-					return true
+					passed = true
 				}
 			}
 		}
+
+		if passed {
+			continue
+		} else {
+			return false
+		}
+
 	}
-	return false
+	return true
 }

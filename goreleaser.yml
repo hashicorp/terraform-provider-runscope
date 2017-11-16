@@ -1,0 +1,8 @@
+builds:
+  - binary: terraform-provider-runscope
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64

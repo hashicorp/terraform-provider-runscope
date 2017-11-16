@@ -21,14 +21,10 @@ build-gox: deps fmtcheck vet
 	gox -osarch="linux/amd64 windows/amd64 darwin/amd64" \
 	-output="pkg/{{.OS}}_{{.Arch}}/terraform-provider-runscope" .
 
-release: build-gox
-	@test "${VERSION}" || (echo 'VERSION name required' && exit 1)
-	rm -f pkg/darwin_amd64/terraform-provider-runscope_${VERSION}_darwin_amd64.zip
-	zip pkg/darwin_amd64/terraform-provider-runscope_${VERSION}_darwin_amd64.zip pkg/darwin_amd64/terraform-provider-runscope
-	rm -f pkg/linux_amd64/terraform-provider-runscope_${VERSION}_linux_amd64.zip
-	zip pkg/linux_amd64/terraform-provider-runscope_${VERSION}_linux_amd64.zip pkg/linux_amd64/terraform-provider-runscope
-	rm -f pkg/windows_amd64/terraform-provider-runscope_${VERSION}_windows_amd64.zip
-	zip pkg/windows_amd64/terraform-provider-runscope_${VERSION}_windows_amd64.zip pkg/windows_amd64/terraform-provider-runscope.exe
+release:
+	go get github.com/goreleaser/goreleaser; \
+    goreleaser; \
+
 deps:
 	go get -u github.com/mitchellh/gox
 

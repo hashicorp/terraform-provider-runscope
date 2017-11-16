@@ -78,7 +78,7 @@ func (client *Client) ReadTestEnvironment(environment *Environment, test *Test) 
 // UpdateSharedEnvironment updates details about an existing shared environment. See https://www.runscope.com/docs/api/environments#modify
 func (client *Client) UpdateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error) {
 	return client.updateEnvironment(environment,
-		fmt.Sprintf("/buckets/%s/Environments/%s", bucket.Key, environment.ID))
+		fmt.Sprintf("/buckets/%s/environments/%s", bucket.Key, environment.ID))
 }
 
 // UpdateTestEnvironment updates details about an existing test environment. See https://www.runscope.com/docs/api/environments#modify

@@ -15,6 +15,18 @@ See the [Plugin Basics][4] page of the Terraform docs to see how to plunk this
 into your config. Check the [releases page][5] of this repo to get releases for
 Linux, OS X, and Windows.
 
+## Releasing
+Releases are automatically setup to go out from the master branch after a build is made on master with a tag.
+
+To perform a release simply create a tag:
+` git tag -a v0.0.2 -m "Release message"`
+
+Then push your tag:
+`git push origin v0.0.2`
+
+
+That's it, the build will now run and create a new release on [github](https://github.com/form3tech/ewilde/terraform-provider-runscope) :
+
 ## Usage
 
 The following section details the use of the provider and its resources.

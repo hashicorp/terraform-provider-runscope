@@ -170,7 +170,7 @@ func resourceEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 				environment, &runscope.Bucket{Key: bucketId})
 		}
 		if err != nil {
-			return fmt.Errorf("Error updating test: %s", err)
+			return fmt.Errorf("Error updating environment: %s", err)
 		}
 	}
 

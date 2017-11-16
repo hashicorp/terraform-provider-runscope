@@ -26,7 +26,8 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"runscope_integration": dataSourceRunscopeIntegration(),
+			"runscope_integration":  dataSourceRunscopeIntegration(),
+			"runscope_integrations": dataSourceRunscopeIntegrations(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

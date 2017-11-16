@@ -48,24 +48,9 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				ForceNew: false,
 			},
 			"integrations": &schema.Schema{
-				Type: schema.TypeList,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"integration_type": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"description": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
+				Type:     schema.TypeList,
 				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"regions": &schema.Schema{
 				Type:     schema.TypeList,
@@ -191,7 +176,7 @@ func resourceEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 				environment, &runscope.Bucket{Key: bucketId})
 		}
 		if err != nil {
-			return fmt.Errorf("Error updating test: %s", err)
+			return fmt.Errorf("Error updating environment: %s", err)
 		}
 	}
 
@@ -260,11 +245,9 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 	if attr, ok := d.GetOk("integrations"); ok {
 		integrations := []*runscope.EnvironmentIntegration{}
 		items := attr.([]interface{})
-		for _, x := range items {
-			item := x.(map[string]interface{})
+		for _, item := range items {
 			integration := runscope.EnvironmentIntegration{
-				ID:              item["id"].(string),
-				IntegrationType: item["integration_type"].(string),
+				ID: item.(string),
 			}
 
 			integrations = append(integrations, &integration)

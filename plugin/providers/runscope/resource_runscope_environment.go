@@ -73,6 +73,10 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				},
 				Optional: true,
 			},
+			"retry_on_failure": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -143,6 +147,7 @@ func resourceEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("preserve_cookies", environment.PreserveCookies)
 	d.Set("initial_variables", environment.InitialVariables)
 	d.Set("integrations", readIntegrations(environment.Integrations))
+	d.Set("retry_on_failure", environment.RetryOnFailure)
 	return nil
 }
 
@@ -159,7 +164,8 @@ func resourceEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 		d.HasChange("initial_variables") ||
 		d.HasChange("integrations") ||
 		d.HasChange("regions") ||
-		d.HasChange("remote_agents") {
+		d.HasChange("remote_agents") ||
+		d.HasChange("retry_on_failure") {
 		client := meta.(*runscope.Client)
 		bucketId := d.Get("bucket_id").(string)
 		if testId, ok := d.GetOk("test_id"); ok {
@@ -275,6 +281,10 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 		}
 
 		environment.RemoteAgents = remote_agents
+	}
+
+	if attr, ok := d.GetOk("retry_on_failure"); ok {
+		environment.RetryOnFailure = attr.(bool)
 	}
 
 	return environment, nil

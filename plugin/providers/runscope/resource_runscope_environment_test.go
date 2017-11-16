@@ -119,10 +119,7 @@ resource "runscope_environment" "environment" {
   name         = "test-environment"
 
   integrations = [
-    {
-      id               = "${data.runscope_integration.slack.id}"
-      integration_type = "slack"
-    }
+		"${data.runscope_integration.slack.id}"
   ]
 
   initial_variables {

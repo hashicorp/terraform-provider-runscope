@@ -38,4 +38,8 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("RUNSCOPE_TEAM_ID"); v == "" {
 		t.Fatal("RUNSCOPE_TEAM_ID must be set for acceptance tests")
 	}
+
+	if v := os.Getenv("RUNSCOPE_INTEGRATION_DESC"); v == "" {
+		t.Fatal("RUNSCOPE_INTEGRATION_DESC must be set for acceptance tests")
+	}
 }

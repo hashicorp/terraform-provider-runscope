@@ -101,6 +101,10 @@ data "runscope_integration" "by_type" {
 	team_uuid = "%s"
 	type      = "slack"
 	filter = {
+		name = "type"
+		values = ["slack"]
+	}
+	filter = {
 		name = "description"
 		values = ["%s","other test description"]
 	}

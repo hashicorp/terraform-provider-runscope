@@ -109,6 +109,10 @@ func testAccCheckEnvironmentExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Expected %s, actual %s", "eu1", environment.Regions[1])
 		}
 
+		if !foundRecord.RetryOnFailure {
+			return fmt.Errorf("Expected retry_on_failure to be set to true")
+		}
+
 		return nil
 	}
 }
@@ -138,6 +142,8 @@ resource "runscope_environment" "environment" {
 			uuid = "arbitrary-string"
 		}
 	]
+
+	retry_on_failure = true
 }
 
 resource "runscope_test" "test" {

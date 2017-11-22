@@ -83,6 +83,34 @@ func (client *Client) DeleteBucket(key string) error {
 	return client.deleteResource("bucket", key, fmt.Sprintf("/buckets/%s", key))
 }
 
+// DeleteBuckets deletes all buckets matching the predicate
+func (client *Client) DeleteBuckets(predicate func(bucket *Bucket) bool) error {
+
+	buckets, err := client.ListBuckets()
+	if err != nil {
+		return err
+	}
+
+	for _, bucket := range buckets  {
+		if predicate(bucket) {
+			client.DeleteBucket(bucket.Key)
+		}
+	}
+
+	return nil
+}
+
+// ListBuckets lists all buckets for an account
+func (client *Client) ListBuckets() ([]*Bucket, error) {
+	resource, error := client.readResource("[]bucket", "", "/buckets")
+	if error != nil {
+		return nil, error
+	}
+
+	buckets, error := getBucketsFromResponse(resource.Data)
+	return buckets, error
+}
+
 func (bucket *Bucket) String() string {
 	value, err := json.Marshal(bucket)
 	if err != nil {
@@ -90,6 +118,13 @@ func (bucket *Bucket) String() string {
 	}
 
 	return string(value)
+}
+
+
+func getBucketsFromResponse(response interface{}) ([]*Bucket, error) {
+	var buckets []*Bucket
+	err := decode(&buckets, response)
+	return buckets, err
 }
 
 func getBucketFromResponse(response interface{}) (*Bucket, error) {

@@ -21,7 +21,8 @@ func TestAccStep_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckStepMainPageExists("runscope_step.main_page"),
 					resource.TestCheckResourceAttr(
-						"runscope_step.main_page", "url", "http://example.com")),
+						"runscope_step.main_page", "url", "http://example.com"),
+				),
 			},
 		},
 	})
@@ -223,6 +224,14 @@ resource "runscope_step" "main_page" {
   		value  = "Bearer bb74fe7b-b9f2-48bd-9445-bdc60e1edc6a",
 	}
   ]
+
+  auth = {
+	username  = "user"
+	auth_type = "basic"
+	password  = "password1"
+  }
+
+
 }
 
 resource "runscope_test" "test" {

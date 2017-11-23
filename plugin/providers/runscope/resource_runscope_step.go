@@ -100,6 +100,26 @@ func resourceRunscopeStep() *schema.Resource {
 					},
 				},
 			},
+			"auth": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"username": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"auth_type": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"password": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
+			},
 			"body": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -156,6 +176,17 @@ func resourceStepRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("variables", readVariables(step.Variables))
 	d.Set("assertions", readAssertions(step.Assertions))
 	d.Set("headers", readHeaders(step.Headers))
+
+	if step.Auth != nil && len(step.Auth) > 0 {
+		d.Set("auth", []interface{}{
+			map[string]interface{}{
+				"username":  step.Auth["username"],
+				"auth_type": step.Auth["auth_type"],
+				"password":  step.Auth["password"],
+			},
+		})
+	}
+
 	return nil
 }
 
@@ -229,6 +260,18 @@ func createStepFromResourceData(d *schema.ResourceData) (*runscope.TestStep, str
 		}
 
 		step.Variables = variables
+	}
+
+	if v, _ := d.GetOk("auth"); v != nil {
+		authSet := v.(*schema.Set).List()
+		if len(authSet) == 1 {
+			authMap := authSet[0].(map[string]interface{})
+			auth := make(map[string]string)
+			for key, value := range authMap {
+				auth[key] = value.(string)
+			}
+			step.Auth = auth
+		}
 	}
 
 	if attr, ok := d.GetOk("assertions"); ok {

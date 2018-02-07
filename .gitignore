@@ -6,3 +6,4 @@ terraform-provider-runscope
 pkg
 .terraform
 .DS_Store
+dist

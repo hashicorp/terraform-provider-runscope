@@ -1,5 +1,5 @@
 builds:
-  - binary: terraform-provider-runscope
+  - binary: terraform-provider-runscope_$VERSION
     goos:
       - darwin
       - linux

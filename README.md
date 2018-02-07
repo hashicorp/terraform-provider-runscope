@@ -193,3 +193,7 @@ The following attributes are exported:
 [3]: https://www.terraform.io/docs/plugins/basics.html
 [4]: https://github.com/ewilde/terraform-provider-runscope/releases
 [5]: website/source/docs/providers/runscope
+
+## Developing
+### Running the integration tests
+`make TF_ACC=1 RUNSCOPE_TEAM_ID=xxx RUNSCOPE_ACCESS_TOKEN=xxx RUNSCOPE_INTEGRATION_DESC="test integration"`

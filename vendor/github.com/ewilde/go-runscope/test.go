@@ -1,9 +1,9 @@
 package runscope
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
-	"encoding/json"
 )
 
 // Test represents the details for a runscope test. See https://www.runscope.com/docs/api/tests
@@ -53,23 +53,6 @@ type TestRun struct {
 	Region              string     `json:"region,omitempty"`
 }
 
-// TestStep represents each step that makes up part of the test. See https://www.runscope.com/docs/api/steps
-type TestStep struct {
-	URL        string                 `json:"url,omitempty"`
-	Variables  []*Variable            `json:"variables,omitempty"`
-	Args       map[string]interface{} `json:"args,omitempty"`
-	StepType   string                 `json:"step_type,omitempty"`
-	Auth       map[string]string      `json:"auth,omitempty"`
-	ID         string                 `json:"id,omitempty"`
-	Body       string                 `json:"body,omitempty"`
-	Note       string                 `json:"note,omitempty"`
-	Headers    map[string][]string    `json:"headers,omitempty"`
-	RequestID  string                 `json:"request_id,omitempty"`
-	Assertions []*Assertion           `json:"assertions,omitempty"`
-	Scripts    []*Script               `json:"scripts,omitempty"`
-	Method     string                 `json:"method,omitempty"`
-}
-
 // Variable allow you to extract data from request, subtest, and Ghost Inspector steps for use in subsequent steps in the test. Similar to Assertions, each variable is defined by a name, source, and property. See https://www.runscope.com/docs/api/steps#variables
 type Variable struct {
 	Name     string `json:"name,omitempty"`
@@ -89,6 +72,7 @@ type Assertion struct {
 type Script struct {
 	Value string `json:"value"`
 }
+
 /*
 "request_id": "2dbfb5d2-3b5a-499c-9550-b06f9a475feb",
 "assertions": [
@@ -106,14 +90,14 @@ type Script struct {
 
 // Contact details
 type Contact struct {
-	Email string     `json:"email,omitempty"`
-        ID    string     `json:"id"`
-        Name  string     `json:"name,omitempty"`
+	Email string `json:"email,omitempty"`
+	ID    string `json:"id"`
+	Name  string `json:"name,omitempty"`
 }
 
 // NewTest creates a new test struct
 func NewTest() *Test {
-	return &Test { Bucket: &Bucket{}}
+	return &Test{Bucket: &Bucket{}}
 }
 
 // CreateTest creates a new runscope test. See https://www.runscope.com/docs/api/tests#create

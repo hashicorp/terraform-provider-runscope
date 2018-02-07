@@ -12,7 +12,7 @@ type Schedule struct {
 
 // NewSchedule creates a new schedule struct
 func NewSchedule() *Schedule {
-	return &Schedule {}
+	return &Schedule{}
 }
 
 // CreateSchedule creates a new test schedule. See https://www.runscope.com/docs/api/schedules#create

@@ -33,9 +33,9 @@ type Team struct {
 }
 
 type response struct {
-	Meta  metaResponse           `json:"meta"`
-	Data  interface{}            `json:"data"`
-	Error errorResponse          `json:"error"`
+	Meta  metaResponse  `json:"meta"`
+	Data  interface{}   `json:"data"`
+	Error errorResponse `json:"error"`
 }
 
 type errorResponse struct {
@@ -174,7 +174,7 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 	return &response, nil
 }
 
-func (client *Client) deleteResource(resourceType string, resourceName string, endpoint string) (error) {
+func (client *Client) deleteResource(resourceType string, resourceName string, endpoint string) error {
 	log.Printf("[DEBUG] deleting %s %s", resourceType, resourceName)
 	req, err := client.newRequest("DELETE", endpoint, nil)
 	if err != nil {

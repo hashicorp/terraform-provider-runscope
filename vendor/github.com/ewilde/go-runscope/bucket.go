@@ -1,7 +1,7 @@
 /*
 Package runscope implements a client library for the runscope api (https://www.runscope.com/docs/api)
 
- */
+*/
 package runscope
 
 import (
@@ -14,16 +14,16 @@ import (
 
 // Bucket resources are a simple way to organize your requests and tests. See https://www.runscope.com/docs/api/buckets and https://www.runscope.com/docs/buckets
 type Bucket struct {
-	Name           string  `json:"name,omitempty"`
-	Key            string  `json:"key,omitempty"`
-	Default        bool    `json:"default,omitempty"`
-	AuthToken      string  `json:"auth_token,omitempty"`
-	TestsURL       string  `json:"tests_url,omitempty" mapstructure:"tests_url"`
-	CollectionsURL string  `json:"collections_url,omitempty"`
-	MessagesURL    string  `json:"messages_url,omitempty"`
-	TriggerURL     string  `json:"trigger_url,omitempty"`
-	VerifySsl      bool    `json:"verify_ssl,omitempty"`
-	Team           *Team   `json:"team,omitempty"`
+	Name           string `json:"name,omitempty"`
+	Key            string `json:"key,omitempty"`
+	Default        bool   `json:"default,omitempty"`
+	AuthToken      string `json:"auth_token,omitempty"`
+	TestsURL       string `json:"tests_url,omitempty" mapstructure:"tests_url"`
+	CollectionsURL string `json:"collections_url,omitempty"`
+	MessagesURL    string `json:"messages_url,omitempty"`
+	TriggerURL     string `json:"trigger_url,omitempty"`
+	VerifySsl      bool   `json:"verify_ssl,omitempty"`
+	Team           *Team  `json:"team,omitempty"`
 }
 
 // CreateBucket creates a new bucket resource. See https://www.runscope.com/docs/api/buckets#bucket-create
@@ -91,7 +91,7 @@ func (client *Client) DeleteBuckets(predicate func(bucket *Bucket) bool) error {
 		return err
 	}
 
-	for _, bucket := range buckets  {
+	for _, bucket := range buckets {
 		if predicate(bucket) {
 			client.DeleteBucket(bucket.Key)
 		}
@@ -119,7 +119,6 @@ func (bucket *Bucket) String() string {
 
 	return string(value)
 }
-
 
 func getBucketsFromResponse(response interface{}) ([]*Bucket, error) {
 	var buckets []*Bucket

@@ -139,6 +139,22 @@ func testAccCheckStepMainPageExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Expected header %s to exist", "Accept-Encoding")
 		}
 
+		if len(foundRecord.Scripts) != 2 {
+			return fmt.Errorf("Expected %d scripts, actual %d", 2, len(foundRecord.Scripts))
+		}
+
+		if foundRecord.Scripts[1] != "log(\"script 2\");" {
+			return fmt.Errorf("Expected %s, actual %s", "log(\"script 2\");", foundRecord.Scripts[1])
+		}
+
+		if len(foundRecord.BeforeScripts) != 1 {
+			return fmt.Errorf("Expected %d scripts, actual %d", 1, len(foundRecord.BeforeScripts))
+		}
+
+		if foundRecord.BeforeScripts[0] != "log(\"before script\");" {
+			return fmt.Errorf("Expected %s, actual %s", "log(\"before script\");", foundRecord.BeforeScripts[0])
+		}
+
 		return nil
 	}
 }
@@ -209,7 +225,7 @@ resource "runscope_step" "main_page" {
            value      = "c5baeb4a-2379-478a-9cda-1b671de77cf9",
            property   = "data.id"
   	},
-  ],
+  ]
   headers        = [
   	{
   		header = "Accept-Encoding",
@@ -231,7 +247,13 @@ resource "runscope_step" "main_page" {
 	password  = "password1"
   }
 
-
+  scripts = [
+    "log(\"script 1\");",
+    "log(\"script 2\");"
+  ]
+  before_scripts = [
+    "log(\"before script\");"
+  ]
 }
 
 resource "runscope_test" "test" {

@@ -1,13 +1,31 @@
 package runscope
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 )
+
+// TestStep represents each step that makes up part of the test. See https://www.runscope.com/docs/api/steps
+type TestStep struct {
+	URL           string                 `json:"url,omitempty"`
+	Variables     []*Variable            `json:"variables,omitempty"`
+	Args          map[string]interface{} `json:"args,omitempty"`
+	StepType      string                 `json:"step_type,omitempty"`
+	Auth          map[string]string      `json:"auth,omitempty"`
+	ID            string                 `json:"id,omitempty"`
+	Body          string                 `json:"body,omitempty"`
+	Note          string                 `json:"note,omitempty"`
+	Headers       map[string][]string    `json:"headers,omitempty"`
+	RequestID     string                 `json:"request_id,omitempty"`
+	Assertions    []*Assertion           `json:"assertions,omitempty"`
+	Scripts       []string               `json:"scripts,omitempty"`
+	BeforeScripts []string               `json:"before_scripts,omitempty"`
+	Method        string                 `json:"method,omitempty"`
+}
 
 // NewTestStep creates a new test step struct
 func NewTestStep() *TestStep {
-	return &TestStep {}
+	return &TestStep{}
 }
 
 // CreateTestStep creates a new runscope test step. See https://www.runscope.com/docs/api/steps#add
@@ -25,7 +43,7 @@ func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testI
 	}
 
 	steps := newResource.Data.([]interface{})
-	step := steps[len(steps) - 1].(map[string]interface{})
+	step := steps[len(steps)-1].(map[string]interface{})
 	newTestStep, error := getTestStepFromResponse(step)
 	if error != nil {
 		return nil, error
@@ -77,7 +95,6 @@ func getTestStepFromResponse(response interface{}) (*TestStep, error) {
 	err := decode(testStep, response)
 	return testStep, err
 }
-
 
 func (step *TestStep) validate() error {
 	if step.StepType == "request" {

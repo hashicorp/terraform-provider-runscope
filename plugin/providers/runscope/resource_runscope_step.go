@@ -124,6 +124,16 @@ func resourceRunscopeStep() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"scripts": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"before_scripts": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 		},
 	}
 }
@@ -176,7 +186,8 @@ func resourceStepRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("variables", readVariables(step.Variables))
 	d.Set("assertions", readAssertions(step.Assertions))
 	d.Set("headers", readHeaders(step.Headers))
-
+	d.Set("scripts", step.Scripts)
+	d.Set("before_scripts", step.BeforeScripts)
 	if step.Auth != nil && len(step.Auth) > 0 {
 		d.Set("auth", []interface{}{
 			map[string]interface{}{
@@ -300,6 +311,14 @@ func createStepFromResourceData(d *schema.ResourceData) (*runscope.TestStep, str
 			header := item["header"].(string)
 			step.Headers[header] = append(step.Headers[header], item["value"].(string))
 		}
+	}
+
+	if attr, ok := d.GetOk("scripts"); ok {
+		step.Scripts = expandStringList(attr.([]interface{}))
+	}
+
+	if attr, ok := d.GetOk("before_scripts"); ok {
+		step.BeforeScripts = expandStringList(attr.([]interface{}))
 	}
 
 	return step, bucketId, testId, nil

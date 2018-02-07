@@ -1,9 +1,9 @@
 package runscope
 
 import (
-	"time"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"time"
 )
 
 // Environment stores details for shared and test-specific environments. See https://www.runscope.com/docs/api/environments
@@ -131,7 +131,7 @@ func (client *Client) readEnvironment(environment *Environment, endpoint string)
 }
 
 func (client *Client) updateEnvironment(environment *Environment, endpoint string) (*Environment, error) {
-	resource, error := client.updateResource(environment,"environment", environment.ID, endpoint)
+	resource, error := client.updateResource(environment, "environment", environment.ID, endpoint)
 	if error != nil {
 		return nil, error
 	}

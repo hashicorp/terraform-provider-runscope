@@ -1,9 +1,9 @@
 package runscope
 
 import (
+	"github.com/mitchellh/mapstructure"
 	"reflect"
 	"time"
-	"github.com/mitchellh/mapstructure"
 )
 
 func floatToTimeDurationHookFunc() mapstructure.DecodeHookFunc {
@@ -22,7 +22,7 @@ func floatToTimeDurationHookFunc() mapstructure.DecodeHookFunc {
 		// Convert it by parsing
 		rawValue := data.(float64)
 		seconds := int64(rawValue)
-		nanoSeconds := int64((rawValue - float64(int64(rawValue)))*1e9)
+		nanoSeconds := int64((rawValue - float64(int64(rawValue))) * 1e9)
 		return time.Unix(seconds, nanoSeconds), nil
 	}
 }
@@ -30,9 +30,9 @@ func floatToTimeDurationHookFunc() mapstructure.DecodeHookFunc {
 func decode(result interface{}, response interface{}) error {
 
 	config := &mapstructure.DecoderConfig{
-		Metadata: nil,
-		Result:   result,
-		TagName:  "json",
+		Metadata:   nil,
+		Result:     result,
+		TagName:    "json",
 		DecodeHook: floatToTimeDurationHookFunc(),
 	}
 	decoder, err := mapstructure.NewDecoder(config)

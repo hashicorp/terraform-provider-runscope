@@ -86,7 +86,7 @@ func resourceStepTokenRead(d *schema.ResourceData, meta interface{}) error {
 
 	step, err := client.ReadTestStep(stepFromResource, bucketId, testId)
 	if err != nil {
-		if strings.Contains(err.Error(), "404") {
+		if strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "403") {
 			d.SetId("")
 			return nil
 		}

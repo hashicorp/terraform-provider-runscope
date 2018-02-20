@@ -8,7 +8,7 @@ after_success:
 env:
   global:
   - |
-    RUNSCOPE_INTEGRATION_DESC="Slack: #general channel, send message on all test runs"
+    RUNSCOPE_INTEGRATION_DESC="Slack: #test1 channel, send message on all test runs"
   - DEBUG=1
   - TF_ACC=1
   - secure: WuBIDsitJiSSj43a+sz4R9cDY2AF2ODerVkx2eKxXIXtKRLqjBxiQD8gekfTIprbiMfsOCMPr5cjp1AmjuZCWu10DrshAbPvTP6h5Fvm10CRkpdojyOoJZuRrhhZwpaahxo2tE53iLHXtQ+5CMKOecG1Z2ts7b3jWny93AVwuD+Jmft27KqBcFPceOL9mQgdMEBOTjTV5wdhKrRtiyzrVUx50odkuKXGKGFT8GdKyvF6KxuOA2TK+2o7tFiswEUXTWZUNM6weC84Mx/74VSy0tzy6+fTaDkYR5X4BcXQNthctLeElpw/bSqGWJZcEmLOBnPwbB5Si56f/jS5COdQ0bXmuQD+eE16vI+F5ufXHibP4Uh8ltLMEkj5YD6PWNL4A5xAnOps4zLBM43wxtRl00d9BmSn30VlY8TfTQALSR5CC/zB6ciNQm+Or9Awgolucj7MDA/dgreEElDRS2j/Gl9JlJ3DuKUWwEHn9KU3g4bYnnRqUSVWVjoPg+jOkkUWC+hb8N7KF89VUV+J7LvsfMJM5b3030WPIGug2GLc1avVrWGHPTgTXit6/HueLSuHdeD/nQOqBTarzAHdNP72ACcbcuaknAUUdo9nTZQUVCbjca8PkBveIosQP07RHBtoxixkgkNSLialZx2Uhlgu2MWbp8r1GEBauJMxLu4voBY=

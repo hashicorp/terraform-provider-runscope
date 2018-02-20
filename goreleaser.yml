@@ -1,13 +1,11 @@
 builds:
-  - binary: terraform-provider-runscope_$VERSION
+  - binary: terraform-provider-runscope_v{{.Version}}
     goos:
       - darwin
       - linux
       - windows
     goarch:
       - amd64
-    hooks:
-      post: ./scripts/goreleaser-post.sh
 archive:
   format: zip
   files:

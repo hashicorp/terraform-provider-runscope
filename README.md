@@ -196,4 +196,13 @@ The following attributes are exported:
 
 ## Developing
 ### Running the integration tests
-`make TF_ACC=1 RUNSCOPE_TEAM_ID=xxx RUNSCOPE_ACCESS_TOKEN=xxx RUNSCOPE_INTEGRATION_DESC="test integration"`
+
+`make TF_ACC=1 RUNSCOPE_TEAM_ID=xxx RUNSCOPE_ACCESS_TOKEN=xxx RUNSCOPE_INTEGRATION_DESC="Slack: #test1 channel, send message on all test runs"`
+
+
+| Environment variables           | Description                             |
+|:----------------|:----------------------------------------|
+| TF_ACC| `1` runs acceptance tests, do not set to skip acceptance tests |
+| RUNSCOPE_TEAM_ID | Runscope [team uuid](https://www.runscope.com/docs/api/teams)|
+| RUNSCOPE_ACCESS_TOKEN | Runscope [access token](https://www.runscope.com/applications/create) |
+| RUNSCOPE_INTEGRATION_DESC | Description that matches a pre-existing runscope integration associated with your account  |

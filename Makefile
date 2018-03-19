@@ -9,7 +9,7 @@ testacc: fmtcheck
 	@test "${RUNSCOPE_ACCESS_TOKEN}" || (echo '$$RUNSCOPE_ACCESS_TOKEN required' && exit 1)
 	@test "${RUNSCOPE_TEAM_ID}" || (echo '$$RUNSCOPE_TEAM_ID required' && exit 1)
 
-	go test -v ./plugin/providers/runscope -run="TestAcc" -timeout 20m
+	go test -count=1 -v ./plugin/providers/runscope -run="TestAcc" -timeout 20m
 
 build: fmtcheck vet testacc
 	@go install

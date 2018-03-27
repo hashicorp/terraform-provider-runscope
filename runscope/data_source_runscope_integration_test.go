@@ -67,18 +67,23 @@ func TestAccDataSourceRunscopeIntegration_Filter(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccDataSourceRunscopeIntegrationFilterConfig, teamId, integrationDesc),
 				Check: resource.ComposeTestCheckFunc(
-					testAccDataSourceRunscopeIntegrationFilter("data.runscope_integration.by_type"),
+					testAccDataSourceRunscopeIntegrationFilter(t, "data.runscope_integration.by_type"),
 				),
 			},
 		},
 	})
 }
 
-func testAccDataSourceRunscopeIntegrationFilter(dataSource string) resource.TestCheckFunc {
+func testAccDataSourceRunscopeIntegrationFilter(t *testing.T, dataSource string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		r := s.RootModule().Resources[dataSource]
-		a := r.Primary.Attributes
 		integrationDesc := os.Getenv("RUNSCOPE_INTEGRATION_DESC")
+
+		r := s.RootModule().Resources[dataSource]
+		if r == nil {
+			t.Fatalf("Integration not found matching '%s'. Please check you have an integration with that description.\n", integrationDesc)
+		}
+
+		a := r.Primary.Attributes
 
 		if a["description"] != integrationDesc {
 			return fmt.Errorf("Expected integration description %s to be %s", a["description"], integrationDesc)

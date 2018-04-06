@@ -11,7 +11,7 @@ testacc: fmtcheck
 
 	go test -count=1 -v ./runscope -run="TestAcc" -timeout 20m
 
-build: fmtcheck vet testacc
+build: fmtcheck vet
 	@go install
 	@mkdir -p ~/.terraform.d/plugins/
 	@cp $(GOPATH)/bin/terraform-provider-runscope ~/.terraform.d/plugins/terraform-provider-runscope

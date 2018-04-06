@@ -1,31 +1,27 @@
 [![Build Status](https://travis-ci.org/ewilde/terraform-provider-runscope.svg?branch=master)](https://travis-ci.org/ewilde/terraform-provider-runscope)
 
-Terraform Runscope Provider
-===========================
+# Terraform Runscope Provider
 
-This repository contains a plugin form of the Runscope provider that was proposed
-and submitted in [Terraform PR #14221][1].
+- Website: https://www.terraform.io
+- [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
+- Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
+
+<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
 
 The Runscope provider is used to create and manage Runscope tests using
-the official [Runscope API][2]
+the official [Runscope API](https://www.runscope.com/docs/api)
+
+## Requirements
+
+-	[Terraform](https://www.terraform.io/downloads.html) 0.10.x
+-	[Go](https://golang.org/doc/install) 1.9 (to build the provider plugin)
+
 
 ## Installing
 
-See the [Plugin Basics][4] page of the Terraform docs to see how to plunk this
-into your config. Check the [releases page][5] of this repo to get releases for
+See the [Plugin Basics][4] page of the Terraform docs to see how to plug this
+into your config. Check the [releases page][5] of this repository to get releases for
 Linux, OS X, and Windows.
-
-## Releasing
-Releases are automatically setup to go out from the master branch after a build is made on master with a tag.
-
-To perform a release simply create a tag:
-` git tag -a v0.0.2 -m "Release message"`
-
-Then push your tag:
-`git push origin v0.0.2`
-
-
-That's it, the build will now run and create a new release on [github](https://github.com/form3tech/ewilde/terraform-provider-runscope) :
 
 ## Usage
 
@@ -194,8 +190,44 @@ The following attributes are exported:
 [4]: https://github.com/ewilde/terraform-provider-runscope/releases
 [5]: website/source/docs/providers/runscope
 
-## Developing
-### Running the integration tests
+# Developing
+
+## Building The Provider
+
+Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-runscope`
+
+```sh
+$ mkdir -p $GOPATH/src/github.com/terraform-providers; cd $GOPATH/src/github.com/terraform-providers
+$ git clone git@github.com:terraform-providers/terraform-provider-runscope
+```
+
+Enter the provider directory and build the provider
+
+```sh
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-runscope
+$ make build
+```
+
+## Using the provider
+
+See [examples](examples/)
+
+See [runscope providers documentation](https://www.terraform.io/docs/providers/runscope/index.html)
+
+## Developing the Provider
+
+If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.9+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
+
+To compile the provider, run `make build`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
+
+```sh
+$ make build
+...
+$ $GOPATH/bin/terraform-provider-runscope
+...
+```
+
+## Running the integration tests
 
 `make TF_ACC=1 RUNSCOPE_TEAM_ID=xxx RUNSCOPE_ACCESS_TOKEN=xxx RUNSCOPE_INTEGRATION_DESC="Slack: #test1 channel, send message on all test runs"`
 
@@ -206,3 +238,15 @@ The following attributes are exported:
 | RUNSCOPE_TEAM_ID | Runscope [team uuid](https://www.runscope.com/docs/api/teams)|
 | RUNSCOPE_ACCESS_TOKEN | Runscope [access token](https://www.runscope.com/applications/create) |
 | RUNSCOPE_INTEGRATION_DESC | Description that matches a pre-existing runscope integration associated with your account  |
+
+## Releasing
+Releases are automatically setup to go out from the master branch after a build is made on master with a tag.
+
+To perform a release simply create a tag:
+` git tag -a v0.0.2 -m "Release message"`
+
+Then push your tag:
+`git push origin v0.0.2`
+
+
+That's it, the build will now run and create a new release on [github](https://github.com/form3tech/ewilde/terraform-provider-runscope) :

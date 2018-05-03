@@ -27,10 +27,7 @@ resource "runscope_environment" "environment" {
   name         = "shared-environment"
 
   integrations = [
-    {
-      id               = "${data.runscope_integration.pagerduty.id}"
-      integration_type = "pagerduty"
-    }
+    "${data.runscope_integration.pagerduty.id}"
   ]
 
   initial_variables {
@@ -54,11 +51,8 @@ resource "runscope_environment" "environment" {
   test_id      = "${runscope_test.api.id}
   name         = "test-environment"
 
-  integrations = [
-    {
-      id               = "${data.runscope_integration.pagerduty.id}"
-      integration_type = "pagerduty"
-    }
+  integrations = [ 
+    "${data.runscope_integration.pagerduty.id}"
   ]
 
   initial_variables {
@@ -98,17 +92,10 @@ If given, creates a test specific environment, otherwise creates a shared enviro
 to to run to setup the environment
 * `preserve_cookies` - (Optional) If this is set to true, tests using this enviornment will manage cookies between steps.
 * `initial_variables` - (Optional) Map of keys and values being used for variables when the test begins.
-* `integrations` - (Optional) A list of integrations to enable for test runs using this environment.
-Integrations documented below.
+* `integrations` - (Optional) A list of integration ids to enable for test runs using this environment.
 * `regions` - (Optional) A list of [Runscope regions](https://www.runscope.com/docs/regions) to execute test runs in when using this environment.
 * `remote_agents` - (Optional) A list of [Remote Agents](https://www.runscope.com/docs/api/agents) to execute test runs in when using this environment.
 Remote Agents documented below.
-
-Integrations (`integrations`) supports the following:
-
-* `id` - (Required) The id of the integration to enable.
-Look the values up using the [runscope_integration](../d/integration.html) data resource.
-* `integration_type` - (Required) The type of integration to enable
 
 Remote Agents (`remote_agents`) supports the following:
 

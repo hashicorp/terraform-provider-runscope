@@ -180,7 +180,9 @@ Client.DeleteSchedule(schedule *Schedule, bucketKey string, testID string) error
 ### Running the tests
 By default the tests requiring access to the runscope api (most of them)
 will be skipped. To run the integration tests please set the following
-environment variables
+environment variables.
+
+**Note:** you will need at least one integration setup on your account, i.e.  [slack](https://www.runscope.com/docs/api-testing/slack)
 
 ```bash
 RUNSCOPE_ACC=true

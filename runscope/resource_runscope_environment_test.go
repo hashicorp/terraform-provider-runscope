@@ -19,9 +19,30 @@ func TestAccEnvironment_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testRunscopeEnvrionmentConfigA, teamId, teamId),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEnvironmentExists("runscope_environment.environment"),
+					testAccCheckEnvironmentExists("runscope_environment.environmentA"),
 					resource.TestCheckResourceAttr(
-						"runscope_environment.environment", "name", "test-environment")),
+						"runscope_environment.environmentA", "name", "test-environment"),
+					resource.TestCheckResourceAttr(
+						"runscope_environment.environmentA", "verify_ssl", "true")),
+			},
+		},
+	})
+}
+func TestAccEnvironment_do_not_verify_ssl(t *testing.T) {
+	teamId := os.Getenv("RUNSCOPE_TEAM_ID")
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckEnvironmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(testRunscopeEnvrionmentConfigB, teamId, teamId),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEnvironmentExists("runscope_environment.environmentB"),
+					resource.TestCheckResourceAttr(
+						"runscope_environment.environmentB", "name", "test-no-ssl"),
+					resource.TestCheckResourceAttr(
+						"runscope_environment.environmentB", "verify_ssl", "false")),
 			},
 		},
 	})
@@ -118,7 +139,7 @@ func testAccCheckEnvironmentExists(n string) resource.TestCheckFunc {
 }
 
 const testRunscopeEnvrionmentConfigA = `
-resource "runscope_environment" "environment" {
+resource "runscope_environment" "environmentA" {
   bucket_id    = "${runscope_bucket.bucket.id}"
   name         = "test-environment"
 
@@ -141,6 +162,50 @@ resource "runscope_environment" "environment" {
 	]
 
 	retry_on_failure = true
+}
+
+resource "runscope_test" "test" {
+  bucket_id = "${runscope_bucket.bucket.id}"
+  name = "runscope test"
+  description = "This is a test test..."
+}
+
+resource "runscope_bucket" "bucket" {
+  name = "terraform-provider-test"
+  team_uuid = "%s"
+}
+
+data "runscope_integration" "slack" {
+  team_uuid = "%s"
+  type = "slack"
+}
+`
+
+const testRunscopeEnvrionmentConfigB = `
+resource "runscope_environment" "environmentB" {
+  bucket_id    = "${runscope_bucket.bucket.id}"
+  name         = "test-no-ssl"
+
+  integrations = [
+		"${data.runscope_integration.slack.id}"
+  ]
+
+  initial_variables {
+    var1 = "true",
+    var2 = "value2"
+  }
+
+  regions = ["us1", "eu1"]
+	
+  remote_agents = [
+    {
+      name = "test agent"
+	  uuid = "arbitrary-string"
+	}
+  ]
+
+  retry_on_failure = true
+  verify_ssl = false
 }
 
 resource "runscope_test" "test" {

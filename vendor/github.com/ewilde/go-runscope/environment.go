@@ -11,14 +11,14 @@ type Environment struct {
 	ID                  string                    `json:"id,omitempty"`
 	Name                string                    `json:"name,omitempty"`
 	Script              string                    `json:"script,omitempty"`
-	PreserveCookies     bool                      `json:"preserve_cookies,omitempty"`
+	PreserveCookies     bool                      `json:"preserve_cookies"`
 	TestID              string                    `json:"test_id,omitempty"`
 	InitialVariables    map[string]string         `json:"initial_variables,omitempty"`
 	Integrations        []*EnvironmentIntegration `json:"integrations,omitempty"`
 	Regions             []string                  `json:"regions,omitempty"`
-	VerifySsl           bool                      `json:"verify_ssl,omitempty"`
+	VerifySsl           bool                      `json:"verify_ssl"`
 	ExportedAt          *time.Time                `json:"exported_at,omitempty"`
-	RetryOnFailure      bool                      `json:"retry_on_failure,omitempty"`
+	RetryOnFailure      bool                      `json:"retry_on_failure"`
 	RemoteAgents        []*LocalMachine           `json:"remote_agents,omitempty"`
 	WebHooks            []string                  `json:"webhooks,omitempty"`
 	ParentEnvironmentID string                    `json:"parent_environment_id,omitempty"`

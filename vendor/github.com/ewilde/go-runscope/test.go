@@ -133,6 +133,17 @@ func (client *Client) ReadTest(test *Test) (*Test, error) {
 	return readTest, nil
 }
 
+// ReadTests reads all tests for a bucket. See https://www.runscope.com/docs/api/tests#list
+func (client *Client) ReadTests(bucketKey string) ([]*Test, error) {
+	resource, error := client.readResource("test", bucketKey, fmt.Sprintf("/buckets/%s/tests", bucketKey))
+	if error != nil {
+		return nil, error
+	}
+
+	tests, error := getTestsFromResponse(resource.Data)
+	return tests, error
+}
+
 // UpdateTest update an existing test. See https://www.runscope.com/docs/api/tests#modifying
 func (client *Client) UpdateTest(test *Test) (*Test, error) {
 	resource, error := client.updateResource(test, "test", test.ID, fmt.Sprintf("/buckets/%s/tests/%s", test.Bucket.Key, test.ID))
@@ -167,4 +178,10 @@ func getTestFromResponse(response interface{}) (*Test, error) {
 	test := new(Test)
 	err := decode(test, response)
 	return test, err
+}
+
+func getTestsFromResponse(response interface{}) ([]*Test, error) {
+	var tests []*Test
+	err := decode(&tests, response)
+	return tests, err
 }

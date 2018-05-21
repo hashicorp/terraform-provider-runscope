@@ -19,6 +19,6 @@ fmt:
 	gofmt -w $(GOFMT_FILES)
 
 test:
-	go test ./...
+	go test -v ./...
 
 .PHONY: build fmt test

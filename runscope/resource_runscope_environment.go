@@ -77,6 +77,11 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
+			"verify_ssl": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  true,
+			},
 		},
 	}
 }
@@ -148,6 +153,7 @@ func resourceEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("initial_variables", environment.InitialVariables)
 	d.Set("integrations", readIntegrations(environment.Integrations))
 	d.Set("retry_on_failure", environment.RetryOnFailure)
+	d.Set("verify_ssl", environment.VerifySsl)
 	return nil
 }
 
@@ -165,7 +171,8 @@ func resourceEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 		d.HasChange("integrations") ||
 		d.HasChange("regions") ||
 		d.HasChange("remote_agents") ||
-		d.HasChange("retry_on_failure") {
+		d.HasChange("retry_on_failure") ||
+		d.HasChange("verify_ssl") {
 		client := meta.(*runscope.Client)
 		bucketId := d.Get("bucket_id").(string)
 		if testId, ok := d.GetOk("test_id"); ok {
@@ -285,6 +292,10 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 
 	if attr, ok := d.GetOk("retry_on_failure"); ok {
 		environment.RetryOnFailure = attr.(bool)
+	}
+
+	if attr, ok := d.Get("verify_ssl").(bool); ok {
+		environment.VerifySsl = attr
 	}
 
 	return environment, nil

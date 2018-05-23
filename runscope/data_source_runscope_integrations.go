@@ -1,10 +1,11 @@
 package runscope
 
 import (
-	"github.com/ewilde/go-runscope"
-	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 	"time"
+
+	"github.com/ewilde/go-runscope"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func dataSourceRunscopeIntegrations() *schema.Resource {
@@ -27,7 +28,7 @@ func dataSourceRunscopeIntegrations() *schema.Resource {
 							Required: true,
 						},
 						"values": {
-							Type:     schema.TypeList,
+							Type:     schema.TypeSet,
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
@@ -35,7 +36,7 @@ func dataSourceRunscopeIntegrations() *schema.Resource {
 				},
 			},
 			"ids": &schema.Schema{
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},

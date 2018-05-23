@@ -2,16 +2,17 @@ package runscope
 
 import (
 	"fmt"
+	"os"
+	"testing"
+
 	"github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"os"
-	"testing"
 )
 
 func TestAccTest_basic(t *testing.T) {
 	var test runscope.Test
-	teamId := os.Getenv("RUNSCOPE_TEAM_ID")
+	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,7 +20,7 @@ func TestAccTest_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTestDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testRunscopeTestConfigA, teamId),
+				Config: fmt.Sprintf(testRunscopeTestConfigA, teamID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTestExists("runscope_test.test", &test),
 					resource.TestCheckResourceAttr(

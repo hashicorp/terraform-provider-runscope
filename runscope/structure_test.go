@@ -1,9 +1,10 @@
 package runscope
 
 import (
-	"github.com/hashicorp/terraform/flatmap"
 	"reflect"
 	"testing"
+
+	"github.com/hashicorp/terraform/flatmap"
 )
 
 func TestExpandStringList(t *testing.T) {

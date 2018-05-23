@@ -2,10 +2,11 @@ package runscope
 
 import (
 	"fmt"
-	"github.com/ewilde/go-runscope"
-	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 	"strings"
+
+	"github.com/ewilde/go-runscope"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceRunscopeEnvironment() *schema.Resource {
@@ -48,17 +49,17 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				ForceNew: false,
 			},
 			"integrations": &schema.Schema{
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"regions": &schema.Schema{
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"remote_agents": &schema.Schema{
-				Type: schema.TypeList,
+				Type: schema.TypeSet,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": &schema.Schema{
@@ -99,14 +100,14 @@ func resourceEnvironmentCreate(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] environment create: %#v", environment)
 
 	var createdEnvironment *runscope.Environment
-	bucketId := d.Get("bucket_id").(string)
+	bucketID := d.Get("bucket_id").(string)
 
-	if testId, ok := d.GetOk("test_id"); ok {
+	if testID, ok := d.GetOk("test_id"); ok {
 		createdEnvironment, err = client.CreateTestEnvironment(environment,
-			&runscope.Test{ID: testId.(string), Bucket: &runscope.Bucket{Key: bucketId}})
+			&runscope.Test{ID: testID.(string), Bucket: &runscope.Bucket{Key: bucketID}})
 	} else {
 		createdEnvironment, err = client.CreateSharedEnvironment(environment,
-			&runscope.Bucket{Key: bucketId})
+			&runscope.Bucket{Key: bucketID})
 	}
 	if err != nil {
 		return fmt.Errorf("Failed to create environment: %s", err)
@@ -127,13 +128,13 @@ func resourceEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	var environment *runscope.Environment
-	bucketId := d.Get("bucket_id").(string)
-	if testId, ok := d.GetOk("test_id"); ok {
+	bucketID := d.Get("bucket_id").(string)
+	if testID, ok := d.GetOk("test_id"); ok {
 		environment, err = client.ReadTestEnvironment(
-			environmentFromResource, &runscope.Test{ID: testId.(string), Bucket: &runscope.Bucket{Key: bucketId}})
+			environmentFromResource, &runscope.Test{ID: testID.(string), Bucket: &runscope.Bucket{Key: bucketID}})
 	} else {
 		environment, err = client.ReadSharedEnvironment(
-			environmentFromResource, &runscope.Bucket{Key: bucketId})
+			environmentFromResource, &runscope.Bucket{Key: bucketID})
 	}
 
 	if err != nil {
@@ -145,7 +146,7 @@ func resourceEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Couldn't find environment: %s", err)
 	}
 
-	d.Set("bucket_id", bucketId)
+	d.Set("bucket_id", bucketID)
 	d.Set("test_id", d.Get("test_id").(string))
 	d.Set("name", environment.Name)
 	d.Set("script", environment.Script)
@@ -174,13 +175,13 @@ func resourceEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 		d.HasChange("retry_on_failure") ||
 		d.HasChange("verify_ssl") {
 		client := meta.(*runscope.Client)
-		bucketId := d.Get("bucket_id").(string)
-		if testId, ok := d.GetOk("test_id"); ok {
+		bucketID := d.Get("bucket_id").(string)
+		if testID, ok := d.GetOk("test_id"); ok {
 			_, err = client.UpdateTestEnvironment(
-				environment, &runscope.Test{ID: testId.(string), Bucket: &runscope.Bucket{Key: bucketId}})
+				environment, &runscope.Test{ID: testID.(string), Bucket: &runscope.Bucket{Key: bucketID}})
 		} else {
 			_, err = client.UpdateSharedEnvironment(
-				environment, &runscope.Bucket{Key: bucketId})
+				environment, &runscope.Bucket{Key: bucketID})
 		}
 		if err != nil {
 			return fmt.Errorf("Error updating environment: %s", err)
@@ -198,17 +199,17 @@ func resourceEnvironmentDelete(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Failed to read environment from resource data: %s", err)
 	}
 
-	bucketId := d.Get("bucket_id").(string)
-	if testId, ok := d.GetOk("test_id"); ok {
+	bucketID := d.Get("bucket_id").(string)
+	if testID, ok := d.GetOk("test_id"); ok {
 		log.Printf("[INFO] Deleting test environment with id: %s name: %s, from test %s",
-			environmentFromResource.ID, environmentFromResource.Name, testId.(string))
+			environmentFromResource.ID, environmentFromResource.Name, testID.(string))
 		err = client.DeleteEnvironment(
-			environmentFromResource, &runscope.Bucket{Key: bucketId})
+			environmentFromResource, &runscope.Bucket{Key: bucketID})
 	} else {
 		log.Printf("[INFO] Deleting shared environment with id: %s name: %s",
 			environmentFromResource.ID, environmentFromResource.Name)
 		err = client.DeleteEnvironment(
-			environmentFromResource, &runscope.Bucket{Key: bucketId})
+			environmentFromResource, &runscope.Bucket{Key: bucketID})
 	}
 
 	if err != nil {
@@ -251,8 +252,8 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 
 	if attr, ok := d.GetOk("integrations"); ok {
 		integrations := []*runscope.EnvironmentIntegration{}
-		items := attr.([]interface{})
-		for _, item := range items {
+		items := attr.(*schema.Set)
+		for _, item := range items.List() {
 			integration := runscope.EnvironmentIntegration{
 				ID: item.(string),
 			}
@@ -265,8 +266,8 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 
 	if attr, ok := d.GetOk("regions"); ok {
 		regions := []string{}
-		items := attr.([]interface{})
-		for _, x := range items {
+		items := attr.(*schema.Set)
+		for _, x := range items.List() {
 			item := x.(string)
 			regions = append(regions, item)
 		}
@@ -275,19 +276,19 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 	}
 
 	if attr, ok := d.GetOk("remote_agents"); ok {
-		remote_agents := []*runscope.LocalMachine{}
-		items := attr.([]interface{})
-		for _, x := range items {
+		remoteAgents := []*runscope.LocalMachine{}
+		items := attr.(*schema.Set)
+		for _, x := range items.List() {
 			item := x.(map[string]interface{})
-			remote_agent := runscope.LocalMachine{
+			remoteAgent := runscope.LocalMachine{
 				Name: item["name"].(string),
 				UUID: item["uuid"].(string),
 			}
 
-			remote_agents = append(remote_agents, &remote_agent)
+			remoteAgents = append(remoteAgents, &remoteAgent)
 		}
 
-		environment.RemoteAgents = remote_agents
+		environment.RemoteAgents = remoteAgents
 	}
 
 	if attr, ok := d.GetOk("retry_on_failure"); ok {

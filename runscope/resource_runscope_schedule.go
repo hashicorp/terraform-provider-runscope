@@ -2,10 +2,11 @@ package runscope
 
 import (
 	"fmt"
-	"github.com/ewilde/go-runscope"
-	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 	"strings"
+
+	"github.com/ewilde/go-runscope"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceRunscopeSchedule() *schema.Resource {
@@ -48,14 +49,14 @@ func resourceRunscopeSchedule() *schema.Resource {
 func resourceScheduleCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*runscope.Client)
 
-	schedule, bucketId, testId, err := createScheduleFromResourceData(d)
+	schedule, bucketID, testID, err := createScheduleFromResourceData(d)
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] schedule create: %#v", schedule)
 
-	createdSchedule, err := client.CreateSchedule(schedule, bucketId, testId)
+	createdSchedule, err := client.CreateSchedule(schedule, bucketID, testID)
 	if err != nil {
 		return fmt.Errorf("Failed to create schedule: %s", err)
 	}
@@ -69,12 +70,12 @@ func resourceScheduleCreate(d *schema.ResourceData, meta interface{}) error {
 func resourceScheduleRead(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*runscope.Client)
 
-	scheduleFromResource, bucketId, testId, err := createScheduleFromResourceData(d)
+	scheduleFromResource, bucketID, testID, err := createScheduleFromResourceData(d)
 	if err != nil {
 		return fmt.Errorf("Failed to read schedule from resource data: %s", err)
 	}
 
-	schedule, err := client.ReadSchedule(scheduleFromResource, bucketId, testId)
+	schedule, err := client.ReadSchedule(scheduleFromResource, bucketID, testID)
 	if err != nil {
 		if strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "403") {
 			d.SetId("")
@@ -84,8 +85,8 @@ func resourceScheduleRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Couldn't find schedule: %s", err)
 	}
 
-	d.Set("bucket_id", bucketId)
-	d.Set("test_id", testId)
+	d.Set("bucket_id", bucketID)
+	d.Set("test_id", testID)
 	d.Set("environment_id", schedule.EnvironmentID)
 	d.Set("interval", schedule.Interval)
 	d.Set("note", schedule.Note)
@@ -95,12 +96,12 @@ func resourceScheduleRead(d *schema.ResourceData, meta interface{}) error {
 func resourceScheduleDelete(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*runscope.Client)
 
-	scheduleFromResource, bucketId, testId, err := createScheduleFromResourceData(d)
+	scheduleFromResource, bucketID, testID, err := createScheduleFromResourceData(d)
 	if err != nil {
 		return fmt.Errorf("Failed to read schedule from resource data: %s", err)
 	}
 
-	err = client.DeleteSchedule(scheduleFromResource, bucketId, testId)
+	err = client.DeleteSchedule(scheduleFromResource, bucketID, testID)
 	if err != nil {
 		return fmt.Errorf("Error deleting schedule: %s", err)
 	}
@@ -111,9 +112,9 @@ func resourceScheduleDelete(d *schema.ResourceData, meta interface{}) error {
 func createScheduleFromResourceData(d *schema.ResourceData) (*runscope.Schedule, string, string, error) {
 
 	schedule := runscope.NewSchedule()
-	bucketId := d.Get("bucket_id").(string)
-	testId := d.Get("test_id").(string)
-	environmentId := d.Get("environment_id").(string)
+	bucketID := d.Get("bucket_id").(string)
+	testID := d.Get("test_id").(string)
+	environmentID := d.Get("environment_id").(string)
 	interval := d.Get("interval").(string)
 	note := ""
 
@@ -124,6 +125,6 @@ func createScheduleFromResourceData(d *schema.ResourceData) (*runscope.Schedule,
 	schedule.ID = d.Id()
 	schedule.Interval = interval
 	schedule.Note = note
-	schedule.EnvironmentID = environmentId
-	return schedule, bucketId, testId, nil
+	schedule.EnvironmentID = environmentID
+	return schedule, bucketID, testID, nil
 }

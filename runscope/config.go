@@ -1,20 +1,21 @@
 package runscope
 
 import (
-	"github.com/ewilde/go-runscope"
 	"log"
+
+	"github.com/ewilde/go-runscope"
 )
 
 // Config contains runscope provider settings
-type Config struct {
+type config struct {
 	AccessToken string
-	ApiUrl      string
+	APIURL      string
 }
 
-func (c *Config) Client() (*runscope.Client, error) {
-	client := runscope.NewClient(c.ApiUrl, c.AccessToken)
+func (c *config) client() (*runscope.Client, error) {
+	client := runscope.NewClient(c.APIURL, c.AccessToken)
 
-	log.Printf("[INFO] runscope client configured for server %s", c.ApiUrl)
+	log.Printf("[INFO] runscope client configured for server %s", c.APIURL)
 
 	return client, nil
 }

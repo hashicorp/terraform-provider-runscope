@@ -2,23 +2,24 @@ package runscope
 
 import (
 	"fmt"
+	"os"
+	"testing"
+
 	"github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"os"
-	"testing"
 )
 
 func TestAccDataSourceRunscopeIntegrations_Basic(t *testing.T) {
 
-	teamId := os.Getenv("RUNSCOPE_TEAM_ID")
+	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccDataSourceRunscopeIntegrationsConfig, teamId),
+				Config: fmt.Sprintf(testAccDataSourceRunscopeIntegrationsConfig, teamID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccDataSourceRunscopeIntegrations("data.runscope_integrations.by_type"),
 				),
@@ -34,10 +35,6 @@ func testAccDataSourceRunscopeIntegrations(dataSource string) resource.TestCheck
 
 		if a["ids.#"] != "2" {
 			return fmt.Errorf("expected to get 2 integrations ids returned from runscope data resource %v, got %v", dataSource, a["ids.#"])
-		}
-
-		if a["ids.0"] == "" {
-			return fmt.Errorf("expected to get an integration id from runscope data resource %v, got blank", dataSource)
 		}
 
 		return nil
@@ -56,14 +53,14 @@ data "runscope_integrations" "by_type" {
 
 func TestAccDataSourceRunscopeIntegrations_usage(t *testing.T) {
 
-	teamId := os.Getenv("RUNSCOPE_TEAM_ID")
+	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccDataSourceRunscopeIntegrationsUsageConfig, teamId),
+				Config: fmt.Sprintf(testAccDataSourceRunscopeIntegrationsUsageConfig, teamID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEnvironmentIntegrations("runscope_environment.environment_with_integrations", true),
 					testAccCheckEnvironmentIntegrations("runscope_environment.environment_no_integrations", false),
@@ -92,9 +89,9 @@ func testAccCheckEnvironmentIntegrations(environment string, expected bool) reso
 
 		environment := new(runscope.Environment)
 		environment.ID = rs.Primary.ID
-		bucketId := rs.Primary.Attributes["bucket_id"]
+		bucketID := rs.Primary.Attributes["bucket_id"]
 		foundRecord, err = client.ReadSharedEnvironment(environment,
-			&runscope.Bucket{Key: bucketId})
+			&runscope.Bucket{Key: bucketID})
 
 		if err != nil {
 			return err

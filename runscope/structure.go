@@ -12,3 +12,12 @@ func expandStringList(configured []interface{}) []string {
 	}
 	return vs
 }
+
+func contains(slice []string, search string) bool {
+	for _, value := range slice {
+		if value == search {
+			return true
+		}
+	}
+	return false
+}

@@ -1,25 +1,24 @@
 package runscope
 
 import (
-	"os"
-
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 )
 
+// Provider returns a terraform.ResourceProvider.
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"access_token": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
-				DefaultFunc: envDefaultFunc("RUNSCOPE_ACCESS_TOKEN"),
+				DefaultFunc: schema.EnvDefaultFunc("RUNSCOPE_ACCESS_TOKEN", nil),
 				Description: "A runscope access token.",
 			},
 			"api_url": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: envDefaultFunc("RUNSCOPE_API_URL"),
+				DefaultFunc: schema.EnvDefaultFunc("RUNSCOPE_API_URL", nil),
 				Description: "A runscope api url i.e. https://api.runscope.com.",
 				Default:     "https://api.runscope.com",
 			},
@@ -36,31 +35,16 @@ func Provider() terraform.ResourceProvider {
 			"runscope_environment": resourceRunscopeEnvironment(),
 			"runscope_schedule":    resourceRunscopeSchedule(),
 			"runscope_step":        resourceRunscopeStep(),
-			"runscope_step_token":  resourceRunscopeStepToken(),
 		},
 
 		ConfigureFunc: providerConfigure,
 	}
 }
 
-func envDefaultFunc(k string) schema.SchemaDefaultFunc {
-	return func() (interface{}, error) {
-		if v := os.Getenv(k); v != "" {
-			if v == "true" {
-				return true, nil
-			} else if v == "false" {
-				return false, nil
-			}
-			return v, nil
-		}
-		return nil, nil
-	}
-}
-
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	config := Config{
+	config := config{
 		AccessToken: d.Get("access_token").(string),
-		ApiUrl:      d.Get("api_url").(string),
+		APIURL:      d.Get("api_url").(string),
 	}
-	return config.Client()
+	return config.client()
 }

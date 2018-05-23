@@ -40,4 +40,6 @@ The following arguments are supported:
 * `type` - (Required) Type of integration to lookup i.e. pagerduty
 
 ## Attributes Reference
+The following attributes are exported:
+
 * `id` - The unique identifier of the found integration.

@@ -1,11 +1,15 @@
+// Note this source file ends in an '_'; otherwise the compiler
+// will treat is as a test file.
+
 package runscope
 
 import (
 	"fmt"
-	"github.com/ewilde/go-runscope"
-	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 	"strings"
+
+	"github.com/ewilde/go-runscope"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceRunscopeTest() *schema.Resource {

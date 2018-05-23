@@ -1,14 +1,14 @@
 package runscope
 
 import (
+	"log"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	"log"
-	"strings"
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -49,11 +49,11 @@ func testAccPreCheck(t *testing.T) {
 
 func TestMain(m *testing.M) {
 
-	config := Config{
+	config := config{
 		AccessToken: os.Getenv("RUNSCOPE_ACCESS_TOKEN"),
-		ApiUrl:      "https://api.runscope.com",
+		APIURL:      "https://api.runscope.com",
 	}
-	client, err := config.Client()
+	client, err := config.client()
 
 	if err != nil {
 		log.Fatalf("Could not create client: %v", err)

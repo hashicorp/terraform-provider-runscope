@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ewilde/terraform-provider-runscope/runscope"
+	"github.com/terraform-providers/terraform-provider-runscope/runscope"
 	"github.com/hashicorp/terraform/plugin"
 )
 

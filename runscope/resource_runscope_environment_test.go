@@ -7,19 +7,21 @@ import (
 	"testing"
 
 	"github.com/ewilde/go-runscope"
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccEnvironment_basic(t *testing.T) {
 	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
+	bucketName := acctest.RandomWithPrefix("tf-test")
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckEnvironmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testRunscopeEnvrionmentConfigA, teamID, teamID),
+				Config: testRunscopeEnvrionmentConfigA(teamID, bucketName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEnvironmentExists("runscope_environment.environmentA"),
 					resource.TestCheckResourceAttr(
@@ -31,14 +33,15 @@ func TestAccEnvironment_basic(t *testing.T) {
 	})
 }
 func TestAccEnvironment_do_not_verify_ssl(t *testing.T) {
-	teamId := os.Getenv("RUNSCOPE_TEAM_ID")
+	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
+	bucketName := acctest.RandomWithPrefix("tf-test")
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckEnvironmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testRunscopeEnvrionmentConfigB, teamId, teamId),
+				Config: testRunscopeEnvrionmentConfigB(teamID, bucketName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEnvironmentExists("runscope_environment.environmentB"),
 					resource.TestCheckResourceAttr(
@@ -140,7 +143,8 @@ func testAccCheckEnvironmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testRunscopeEnvrionmentConfigA = `
+func testRunscopeEnvrionmentConfigA(teamID, bucketName string) string {
+	return fmt.Sprintf(`
 resource "runscope_environment" "environmentA" {
   bucket_id    = "${runscope_bucket.bucket.id}"
   name         = "test-environment"
@@ -173,17 +177,18 @@ resource "runscope_test" "test" {
 }
 
 resource "runscope_bucket" "bucket" {
-  name = "terraform-provider-test"
-  team_uuid = "%s"
+  name = "%s"
+  team_uuid = "%[2]s"
 }
 
 data "runscope_integration" "slack" {
-  team_uuid = "%s"
+  team_uuid = "%[2]s"
   type = "slack"
+}`, bucketName, teamID)
 }
-`
 
-const testRunscopeEnvrionmentConfigB = `
+func testRunscopeEnvrionmentConfigB(teamID, bucketName string) string {
+	return fmt.Sprintf(`
 resource "runscope_environment" "environmentB" {
   bucket_id    = "${runscope_bucket.bucket.id}"
   name         = "test-no-ssl"
@@ -217,12 +222,12 @@ resource "runscope_test" "test" {
 }
 
 resource "runscope_bucket" "bucket" {
-  name = "terraform-provider-test"
-  team_uuid = "%s"
+  name = "%s"
+  team_uuid = "%[2]s"
 }
 
 data "runscope_integration" "slack" {
-  team_uuid = "%s"
+  team_uuid = "%[2]s"
   type = "slack"
+}`, bucketName, teamID)
 }
-`

@@ -6,7 +6,7 @@ WEBSITE_REPO=github.com/hashicorp/terraform-website
 default: build
 
 build: fmtcheck
-  go install
+	go install
 
 test: fmtcheck
   go test -i $(TEST) || exit 1

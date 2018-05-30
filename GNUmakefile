@@ -1,3 +1,4 @@
+SWEEP?=us-east-1,us-west-2
 TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=runscope
@@ -7,6 +8,10 @@ default: build
 
 build: fmtcheck
 	go install
+
+sweep:
+	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
+	go test $(TEST) -v -sweep=$(SWEEP) $(SWEEPARGS)
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1

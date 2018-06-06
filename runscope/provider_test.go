@@ -1,12 +1,9 @@
 package runscope
 
 import (
-	"log"
 	"os"
-	"strings"
 	"testing"
 
-	"github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -45,35 +42,4 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("RUNSCOPE_INTEGRATION_DESC"); v == "" {
 		t.Fatal("RUNSCOPE_INTEGRATION_DESC must be set for acceptance tests")
 	}
-}
-
-func TestMain(m *testing.M) {
-
-	config := config{
-		AccessToken: os.Getenv("RUNSCOPE_ACCESS_TOKEN"),
-		APIURL:      "https://api.runscope.com",
-	}
-	client, err := config.client()
-
-	if err != nil {
-		log.Fatalf("Could not create client: %v", err)
-		os.Exit(-1)
-		return
-	}
-
-	shouldDeleteBucket := func(bucket *runscope.Bucket) bool {
-		if strings.HasPrefix(bucket.Name, "test") || strings.HasSuffix(bucket.Name, "-test") {
-			log.Printf("[DEBUG] deleting bucket %v id: %v", bucket.Name, bucket.Key)
-			return true
-		}
-		return false
-	}
-
-	client.DeleteBuckets(shouldDeleteBucket)
-
-	code := m.Run()
-
-	client.DeleteBuckets(shouldDeleteBucket)
-
-	os.Exit(code)
 }

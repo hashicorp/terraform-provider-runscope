@@ -31,14 +31,14 @@ func TestAccEnvironment_basic(t *testing.T) {
 	})
 }
 func TestAccEnvironment_do_not_verify_ssl(t *testing.T) {
-	teamId := os.Getenv("RUNSCOPE_TEAM_ID")
+	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckEnvironmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testRunscopeEnvrionmentConfigB, teamId, teamId),
+				Config: fmt.Sprintf(testRunscopeEnvrionmentConfigB, teamID, teamID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEnvironmentExists("runscope_environment.environmentB"),
 					resource.TestCheckResourceAttr(

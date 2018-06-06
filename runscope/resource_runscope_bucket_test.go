@@ -5,6 +5,9 @@ import (
 	"os"
 	"testing"
 
+	"log"
+	"strings"
+
 	"github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
@@ -27,6 +30,37 @@ func TestAccBucket_basic(t *testing.T) {
 						"runscope_bucket.bucket", "name", "runscope-bucket"),
 				),
 			},
+		},
+	})
+}
+
+func init() {
+	resource.AddTestSweepers("runscope_bucket", &resource.Sweeper{
+		Name: "runscope_bucket",
+		F: func(region string) error {
+			println("[DEBUG] running test sweeper function runscope_bucket")
+
+			config := config{
+				AccessToken: os.Getenv("RUNSCOPE_ACCESS_TOKEN"),
+				APIURL:      "https://api.runscope.com",
+			}
+			client, err := config.client()
+
+			if err != nil {
+				log.Fatalf("Could not create client: %v", err)
+				return err
+			}
+
+			shouldDeleteBucket := func(bucket *runscope.Bucket) bool {
+				if strings.HasPrefix(bucket.Name, "test") || strings.HasSuffix(bucket.Name, "-test") {
+					log.Printf("[DEBUG] deleting bucket %v id: %v", bucket.Name, bucket.Key)
+					return true
+				}
+				return false
+			}
+
+			client.DeleteBuckets(shouldDeleteBucket)
+			return nil
 		},
 	})
 }

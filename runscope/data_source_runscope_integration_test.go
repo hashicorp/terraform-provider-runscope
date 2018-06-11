@@ -59,9 +59,6 @@ func TestAccDataSourceRunscopeIntegration_Filter(t *testing.T) {
 
 	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
 	var integrationDesc = os.Getenv("RUNSCOPE_INTEGRATION_DESC")
-	if integrationDesc == "" {
-		t.Fatal("RUNSCOPE_INTEGRATION_DESC must be set for this acceptance tests")
-	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

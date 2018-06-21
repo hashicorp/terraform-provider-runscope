@@ -32,6 +32,16 @@ deps:
 
 clean:
 	rm -rf pkg/
+	
+fmt:
+	gofmt -w $(GOFMT_FILES)
+
+fmtcheck:
+	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
+
+errcheck:
+	@sh -c "'$(CURDIR)/scripts/errcheck.sh'"
+
 
 goimports:
 	goimports -w $(GOFMT_FILES)
@@ -79,4 +89,4 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
-.PHONY: build test testacc vet goimports goimportscheck errcheck vendor-status lint test-compile website website-test
+.PHONY: build test testacc vet goimports goimportscheck fmt fmtcheck errcheck errcheck vendor-status lint test-compile website website-test

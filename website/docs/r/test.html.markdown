@@ -10,7 +10,7 @@ description: |-
 
 A [test](https://www.runscope.com/docs/api/tests) resource.
 [Tests](https://www.runscope.com/docs/buckets) are made up of
-a collection of [test steps](test_steps.html) and an
+a collection of [test steps](test.html) and an
 [environment](environment.html).
 
 ## Example Usage

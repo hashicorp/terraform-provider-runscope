@@ -1,4 +1,4 @@
-## 0.2.0 (Unreleased)
+## 0.2.0 (July 03, 2018)
 ENHANCEMENTS:
 * `runscope_test` no longer forces a new resource when the `name` attribute changes.
 

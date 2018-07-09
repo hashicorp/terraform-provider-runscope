@@ -112,7 +112,7 @@ When creating a `request` type of step the additional arguments also apply:
 * `headers` - (Optional) A list of headers to apply to the request. Headers documented below.
 * `body` - (Optional) A string to use as the body of the request.
 * `auth` - (Optional) The credentials used to authenticate the request
-* `before_script` - (Optiona) Runs a script before the request is made
+* `before_script` - (Optional) Runs a script before the request is made
 * `script` - (Optional) Runs a script after the request is made
 
 Variables (`variables`) supports the following:

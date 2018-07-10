@@ -45,6 +45,23 @@ resource "runscope_step" "main_page" {
        property   = "data.id"
   	},
   ],
+  auth = {
+       username  = "myUsername"
+       auth_type = "basic"
+       password  = "myPassword"
+  },
+  before_scripts  = [<<EOF
+       var endVar = new Date();
+       var startVar = new Date(); 
+       alert('this is a multi-line before script')
+    EOF
+  ],
+  scripts        = [<<EOF
+       var endVar = new Date();
+       var startVar = new Date();
+       alert('this is a multi-line after script')
+    EOF
+  ],
   headers        = [
   	{
   		header = "Accept-Encoding",
@@ -94,6 +111,9 @@ When creating a `request` type of step the additional arguments also apply:
 * `assertions` - (Optional) A list of assertions to apply to the HTTP response from this request. Assertions documented below.
 * `headers` - (Optional) A list of headers to apply to the request. Headers documented below.
 * `body` - (Optional) A string to use as the body of the request.
+* `auth` - (Optional) The credentials used to authenticate the request
+* `before_script` - (Optional) Runs a script before the request is made
+* `script` - (Optional) Runs a script after the request is made
 
 Variables (`variables`) supports the following:
 

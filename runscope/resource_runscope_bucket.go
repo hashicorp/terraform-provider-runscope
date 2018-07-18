@@ -14,7 +14,9 @@ func resourceRunscopeBucket() *schema.Resource {
 		Create: resourceBucketCreate,
 		Read:   resourceBucketRead,
 		Delete: resourceBucketDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: resourceBucketImport,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
@@ -73,6 +75,23 @@ func resourceBucketRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("name", bucket.Name)
 	d.Set("team_uuid", bucket.Team.ID)
 	return nil
+}
+
+func resourceBucketImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	key := d.Id()
+
+	err := resourceBucketRead(d, meta)
+	if err != nil {
+		return nil, err
+	}
+
+	if d.Id() == "" {
+		return nil, fmt.Errorf("Couldn't find bucket: %s", key)
+	}
+
+	results := []*schema.ResourceData{d}
+
+	return results, nil
 }
 
 func resourceBucketDelete(d *schema.ResourceData, meta interface{}) error {

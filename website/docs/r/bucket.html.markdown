@@ -36,3 +36,12 @@ The following attributes are exported:
 
 * `name` - The name of this bucket.
 * `team_uuid` - Unique identifier for the team this bucket belongs to.
+
+## Import
+
+Buckets can be imported using the bucket `key`, e.g.
+
+```
+$ terraform import runscope_bucket.example t2f4bkvnggcx
+```
+

@@ -13,8 +13,8 @@ func TestAccImportRunscopeBucket(t *testing.T) {
 	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckBucketDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -35,4 +35,3 @@ resource "runscope_bucket" "test" {
 	name = "integration-test-bucket"
 }
 `
-

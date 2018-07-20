@@ -14,8 +14,8 @@ func TestAccDataSourceRunscopeBucket(t *testing.T) {
 	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckBucketDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -50,4 +50,3 @@ data "runscope_bucket" "test" {
 	key = "${runscope_bucket.test.id}"
 }
 `
-

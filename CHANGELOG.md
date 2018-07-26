@@ -1,12 +1,12 @@
-## 0.3.0 (Unreleased)
+## 0.3.0 (July 26, 2018)
 
 FEATURES:
 
-* **New Data Source:** `runscope_bucket` [GH-12]
-* **New Data Source:** `runscope_buckets` [GH-12]
+* **New Data Source:** `runscope_bucket` ([#12](https://github.com/terraform-providers/terraform-provider-runscope/issues/12))
+* **New Data Source:** `runscope_buckets` ([#12](https://github.com/terraform-providers/terraform-provider-runscope/issues/12))
 
 ENHANCEMENTS:
-*  resource/runscope_bucket: Import support added [GH-12]
+*  resource/runscope_bucket: Import support added ([#12](https://github.com/terraform-providers/terraform-provider-runscope/issues/12))
 
 ## 0.2.0 (July 03, 2018)
 

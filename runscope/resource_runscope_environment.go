@@ -202,6 +202,7 @@ func resourceEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("retry_on_failure", environment.RetryOnFailure)
 	d.Set("verify_ssl", environment.VerifySsl)
 	d.Set("webhooks", environment.WebHooks)
+	d.Set("emails", environment.EmailSettings)
 	return nil
 }
 
@@ -221,7 +222,8 @@ func resourceEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 		d.HasChange("remote_agents") ||
 		d.HasChange("retry_on_failure") ||
 		d.HasChange("verify_ssl") ||
-		d.HasChange("webhooks") {
+		d.HasChange("webhooks") ||
+		d.HasChange("emails") {
 		client := meta.(*runscope.Client)
 		bucketID := d.Get("bucket_id").(string)
 		if testID, ok := d.GetOk("test_id"); ok {
@@ -363,17 +365,17 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 		tmp := attr.([]interface{})
 		items := tmp[0].(map[string]interface{})
 		emailSettings := runscope.EmailSettings{
-			NotifyAll: items["notify_all"].(bool),
-			NotifyOn:  items["notify_on"].(string),
+			NotifyAll:       items["notify_all"].(bool),
+			NotifyOn:        items["notify_on"].(string),
 			NotifyThreshold: items["notify_threshold"].(int),
 		}
 
 		for _, x := range items["recipients"].([]interface{}) {
 			item := x.(map[string]interface{})
 			contact := runscope.Contact{
-				Name:     item["name"].(string),
-				Email:   item["email"].(string),
-				ID: item["id"].(string),
+				Name:  item["name"].(string),
+				Email: item["email"].(string),
+				ID:    item["id"].(string),
 			}
 
 			contacts = append(contacts, &contact)

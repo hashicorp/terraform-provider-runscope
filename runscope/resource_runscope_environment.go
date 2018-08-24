@@ -105,24 +105,23 @@ func resourceRunscopeEnvironment() *schema.Resource {
 							Required: true,
 						},
 						"recipients": &schema.Schema{
-							Type:  schema.TypeList,
+							Type:     schema.TypeList,
 							Required: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-								"name": &schema.Schema{
-									Type:     schema.TypeString,
-									Required: true,
+									"name": &schema.Schema{
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"id": &schema.Schema{
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"email": &schema.Schema{
+										Type:     schema.TypeString,
+										Required: true,
+									},
 								},
-								"id": &schema.Schema{
-									Type:     schema.TypeString,
-									Required: true,
-								},
-								"email": &schema.Schema{
-									Type:     schema.TypeString,
-									Required: true,
-								},
-
-							},
 							},
 						},
 					},
@@ -385,7 +384,6 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 		environment.EmailSettings = &emailSettings
 
 	}
-
 
 	return environment, nil
 }

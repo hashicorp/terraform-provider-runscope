@@ -270,7 +270,6 @@ func createStepFromResourceData(d *schema.ResourceData) (*runscope.TestStep, str
 
 			variables = append(variables, &variable)
 		}
-
 		step.Variables = variables
 	}
 

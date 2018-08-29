@@ -111,15 +111,15 @@ func resourceRunscopeEnvironment() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"name": &schema.Schema{
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 									},
 									"id": &schema.Schema{
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 									},
 									"email": &schema.Schema{
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 									},
 								},
 							},
@@ -201,7 +201,7 @@ func resourceEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("retry_on_failure", environment.RetryOnFailure)
 	d.Set("verify_ssl", environment.VerifySsl)
 	d.Set("webhooks", environment.WebHooks)
-	d.Set("emails", environment.EmailSettings)
+	d.Set("emails", readEmail(environment.EmailSettings))
 	return nil
 }
 
@@ -384,7 +384,6 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 		environment.EmailSettings = &emailSettings
 
 	}
-
 	return environment, nil
 }
 
@@ -402,4 +401,27 @@ func readIntegrations(integrations []*runscope.EnvironmentIntegration) []map[str
 	}
 
 	return result
+}
+
+func readEmail(emailSettings *runscope.EmailSettings) interface{} {
+	resultRecipients := make([]interface{}, 0, 4)
+
+	for _, recipient := range emailSettings.Recipients {
+		item := map[string]interface{}{
+			"name":  recipient.Name,
+			"email": recipient.Email,
+			"id":    recipient.ID,
+		}
+		resultRecipients = append(resultRecipients, item)
+	}
+
+	item := map[string]interface{}{
+		"notify_all":       emailSettings.NotifyAll,
+		"notify_on":        emailSettings.NotifyOn,
+		"notify_threshold": emailSettings.NotifyThreshold,
+		"recipients":       resultRecipients,
+	}
+
+	return item
+
 }

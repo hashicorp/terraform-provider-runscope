@@ -497,6 +497,18 @@
 			"revisionTime": "2017-09-19T17:24:43Z"
 		},
 		{
+			"checksumSHA1": "Fzbv+N7hFXOtrR6E7ZcHT3jEE9s=",
+			"path": "github.com/hashicorp/terraform/helper/structure",
+			"revision": "3776e6ddc956a603e32f7d0d197a83618f880f39",
+			"revisionTime": "2018-09-11T15:56:14Z"
+		},
+		{
+			"checksumSHA1": "nEC56vB6M60BJtGPe+N9rziHqLg=",
+			"path": "github.com/hashicorp/terraform/helper/validation",
+			"revision": "3776e6ddc956a603e32f7d0d197a83618f880f39",
+			"revisionTime": "2018-09-11T15:56:14Z"
+		},
+		{
 			"checksumSHA1": "yFWmdS6yEJZpRJzUqd/mULqCYGk=",
 			"path": "github.com/hashicorp/terraform/moduledeps",
 			"revision": "a28b5d295e5df4192da4519f242c4d55c5451828",
@@ -901,5 +913,5 @@
 			"revisionTime": "2017-09-27T07:01:17Z"
 		}
 	],
-	"rootPath": "github.com/ewilde/terraform-provider-runscope"
+	"rootPath": "github.com/terraform-providers/terraform-provider-runscope"
 }

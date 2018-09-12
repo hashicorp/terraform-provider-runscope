@@ -239,6 +239,12 @@ $ $GOPATH/bin/terraform-provider-runscope
 | RUNSCOPE_ACCESS_TOKEN | Runscope [access token](https://www.runscope.com/applications/create) |
 | RUNSCOPE_INTEGRATION_DESC | Description that matches a pre-existing runscope integration associated with your account  |
 
+## Vendoring / dependency management
+Dependencies are managed using `govendor`
+
+### Add or update a dependency
+`govendor fetch -v {import}`
+
 ## Releasing
 Releases are automatically setup to go out from the master branch after a build is made on master with a tag.
 

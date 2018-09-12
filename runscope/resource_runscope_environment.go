@@ -1,12 +1,16 @@
 package runscope
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform/helper/hashcode"
+
 	"github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 )
 
 func resourceRunscopeEnvironment() *schema.Resource {
@@ -87,9 +91,11 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
+				Set:      schema.HashString,
 			},
 			"emails": &schema.Schema{
-				Type: schema.TypeList,
+				Type:     schema.TypeList,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"notify_all": &schema.Schema{
@@ -99,13 +105,16 @@ func resourceRunscopeEnvironment() *schema.Resource {
 						"notify_on": &schema.Schema{
 							Type:     schema.TypeString,
 							Required: true,
+							ValidateFunc: validation.StringInSlice([]string{
+								"all", "failures", "threshold", "switch",
+							}, false),
 						},
 						"notify_threshold": &schema.Schema{
 							Type:     schema.TypeInt,
 							Required: true,
 						},
 						"recipients": &schema.Schema{
-							Type:     schema.TypeList,
+							Type:     schema.TypeSet,
 							Required: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -123,6 +132,7 @@ func resourceRunscopeEnvironment() *schema.Resource {
 									},
 								},
 							},
+							Set: recipientsHash,
 						},
 					},
 				},
@@ -369,7 +379,7 @@ func createEnvironmentFromResourceData(d *schema.ResourceData) (*runscope.Enviro
 			NotifyThreshold: items["notify_threshold"].(int),
 		}
 
-		for _, x := range items["recipients"].([]interface{}) {
+		for _, x := range items["recipients"].(*schema.Set).List() {
 			item := x.(map[string]interface{})
 			contact := runscope.Contact{
 				Name:  item["name"].(string),
@@ -424,4 +434,13 @@ func readEmail(emailSettings *runscope.EmailSettings) interface{} {
 
 	return item
 
+}
+
+func recipientsHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	buf.WriteString(fmt.Sprintf("%s-", m["name"].(string)))
+	buf.WriteString(fmt.Sprintf("%s-", m["id"].(string)))
+	buf.WriteString(fmt.Sprintf("%s-", m["email"].(string)))
+	return hashcode.String(buf.String())
 }

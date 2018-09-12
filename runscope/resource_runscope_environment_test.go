@@ -30,6 +30,33 @@ func TestAccEnvironment_basic(t *testing.T) {
 		},
 	})
 }
+
+func TestAccEnvironment_emails(t *testing.T) {
+	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckEnvironmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(testRunscopeEnvrionmentConfigWithEmail, teamID, teamID),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEnvironmentExists("runscope_environment.environmentA"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "name", "test-environment"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "verify_ssl", "true"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "emails.#", "1"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "emails.0.notify_all", "true"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "emails.0.notify_on", "all"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "emails.0.notify_threshold", "1"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "emails.0.recipients.#", "2"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "emails.0.recipients.769210288.name", "bob"),
+					resource.TestCheckResourceAttr("runscope_environment.environmentA", "emails.0.recipients.769210288.email", "bob@gmail.com"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccEnvironment_do_not_verify_ssl(t *testing.T) {
 	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
 	resource.Test(t, resource.TestCase{
@@ -140,18 +167,6 @@ func testAccCheckEnvironmentExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Expected %s, actual %s", "https://example.com", strings.Join(foundRecord.WebHooks, ","))
 		}
 
-		if !foundRecord.EmailSettings.NotifyAll {
-			return fmt.Errorf("Expected notify_all to be set to true")
-		}
-
-		if foundRecord.EmailSettings.NotifyOn != "all" {
-			return fmt.Errorf("Expected %s, actual %s", "all", foundRecord.EmailSettings.NotifyOn)
-		}
-
-		if foundRecord.EmailSettings.NotifyThreshold != 1 {
-			return fmt.Errorf("Expected %d, actual %d", 1, foundRecord.EmailSettings.NotifyThreshold)
-		}
-
 		return nil
 	}
 }
@@ -181,19 +196,65 @@ resource "runscope_environment" "environmentA" {
 
 	retry_on_failure = true
 	webhooks = ["https://example.com"]
-	emails = 
-		{
-			notify_all       = true
-      		notify_on        = "all"
-      		notify_threshold = 1
+}
 
-      		recipients       = [
-      			{
-      				name = "marek"
-      				email = "marekpastierik15@gmail.com"
-      			}
-      		]
+resource "runscope_test" "test" {
+  bucket_id = "${runscope_bucket.bucket.id}"
+  name = "runscope test"
+  description = "This is a test test..."
+}
+
+resource "runscope_bucket" "bucket" {
+  name = "terraform-provider-test"
+  team_uuid = "%s"
+}
+
+data "runscope_integration" "slack" {
+  team_uuid = "%s"
+  type = "slack"
+}
+`
+const testRunscopeEnvrionmentConfigWithEmail = `
+resource "runscope_environment" "environmentA" {
+  bucket_id    = "${runscope_bucket.bucket.id}"
+  name         = "test-environment"
+
+  integrations = [
+		"${data.runscope_integration.slack.id}"
+  ]
+
+  initial_variables {
+    var1 = "true",
+    var2 = "value2"
+  }
+
+	regions = ["us1", "eu1"]
+	
+	remote_agents = [
+		{
+			name = "test agent"
+			uuid = "arbitrary-string"
 		}
+	]
+
+	retry_on_failure = true
+	webhooks = ["https://example.com"]
+	emails = {
+	  notify_all       = true
+      notify_on        = "all"
+      notify_threshold = 1
+
+      recipients = [
+      	{
+      		name = "marek"
+      		email = "marekpastierik15@gmail.com"
+      	},
+      	{
+      		name = "bob"
+      		email = "bob@gmail.com"
+      	},
+      ]
+	}
 }
 
 resource "runscope_test" "test" {
@@ -238,21 +299,6 @@ resource "runscope_environment" "environmentB" {
 
   retry_on_failure = true
   verify_ssl = false
-
-  webhooks = ["https://example.com"]
-	emails = 
-		{
-			notify_all       = true
-      		notify_on        = "all"
-      		notify_threshold = 1
-
-      		recipients       = [
-      			{
-      				name = "marek"
-      				email = "marekpastierik15@gmail.com"
-      			}
-      		]
-		}
 }
 
 resource "runscope_test" "test" {

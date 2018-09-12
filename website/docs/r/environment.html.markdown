@@ -96,11 +96,26 @@ to to run to setup the environment
 * `regions` - (Optional) A list of [Runscope regions](https://www.runscope.com/docs/regions) to execute test runs in when using this environment.
 * `remote_agents` - (Optional) A list of [Remote Agents](https://www.runscope.com/docs/api/agents) to execute test runs in when using this environment.
 Remote Agents documented below.
+* `webhooks` (Optional) A list of URL's to send results to when test runs using this environment finish.
+* `emails` (Optional) A list of settings for sending email notifications upon completion of a test run using this environment. Emails block is documented below
 
 Remote Agents (`remote_agents`) supports the following:
 
 * `name` - (Required) The name of the remote agent
 * `uuid` - (Required) The uuid of the remote agent
+
+Emails (`emails`) supports the following:
+
+* `notify_all` - (Required) Send an email to all team members according to the `notify_on` rules.
+* `notify_on` - (Required) Upon completion of a test run Runscope will send email notifications, allowed values: `all`, `failures`, `threshold` or `switch`
+* `notify_threshold` (Required) An integer between 1 and 10 for use with the `notify_on settings`: only used when `threshold` and `switch` values are given
+* `recipients` (Required) A list of recipients to notify, documented below
+
+Recipients (`recipients`), See [team api](https://www.runscope.com/docs/api/teams), supports the following:
+
+* `name` - (Optional) The name of the person. 
+* `id` - (Optional) The unique identifier for this person's account.
+* `email` - (Optional) The email address for this account.
 
 ## Attributes Reference
 

@@ -136,6 +136,22 @@ func testAccCheckEnvironmentExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Expected retry_on_failure to be set to true")
 		}
 
+		if !contains(foundRecord.WebHooks, "https://example.com") {
+			return fmt.Errorf("Expected %s, actual %s", "https://example.com", strings.Join(foundRecord.WebHooks, ","))
+		}
+
+		if !foundRecord.EmailSettings.NotifyAll {
+			return fmt.Errorf("Expected notify_all to be set to true")
+		}
+
+		if foundRecord.EmailSettings.NotifyOn != "all" {
+			return fmt.Errorf("Expected %s, actual %s", "all", foundRecord.EmailSettings.NotifyOn)
+		}
+
+		if foundRecord.EmailSettings.NotifyThreshold != 1 {
+			return fmt.Errorf("Expected %d, actual %d", 1, foundRecord.EmailSettings.NotifyThreshold)
+		}
+
 		return nil
 	}
 }
@@ -164,6 +180,20 @@ resource "runscope_environment" "environmentA" {
 	]
 
 	retry_on_failure = true
+	webhooks = ["https://example.com"]
+	emails = 
+		{
+			notify_all       = true
+      		notify_on        = "all"
+      		notify_threshold = 1
+
+      		recipients       = [
+      			{
+      				name = "marek"
+      				email = "marekpastierik15@gmail.com"
+      			}
+      		]
+		}
 }
 
 resource "runscope_test" "test" {
@@ -208,6 +238,21 @@ resource "runscope_environment" "environmentB" {
 
   retry_on_failure = true
   verify_ssl = false
+
+  webhooks = ["https://example.com"]
+	emails = 
+		{
+			notify_all       = true
+      		notify_on        = "all"
+      		notify_threshold = 1
+
+      		recipients       = [
+      			{
+      				name = "marek"
+      				email = "marekpastierik15@gmail.com"
+      			}
+      		]
+		}
 }
 
 resource "runscope_test" "test" {

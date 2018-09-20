@@ -43,7 +43,6 @@ The following arguments are supported:
 * `access_token` - (Required) The Runscope access token.
   This can also be specified with the `RUNSCOPE_ACCESS_TOKEN` shell
   environment variable.
-* `bucket_id` - (Required) The ID of the bucket to create the test.
 * `api_url` - (Optional) If set, specifies the Runscope api url, this
    defaults to `"https://api.runscope.com`. This can also be specified
    with the `RUNSCOPE_API_URL` shell environment variable.

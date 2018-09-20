@@ -35,6 +35,7 @@ The following arguments are supported:
 The following attributes are exported:
 
 * `name` - The name of this bucket.
+* `id` - The ID of this bucket.
 * `team_uuid` - Unique identifier for the team this bucket belongs to.
 
 ## Import

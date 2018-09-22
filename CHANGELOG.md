@@ -1,4 +1,6 @@
 ## 0.4.0 (Unreleased)
+ENHANCEMENTS:
+*  resource/runscope_environment: New attributes `webhooks` and `emails` added ([#13](https://github.com/terraform-providers/terraform-provider-runscope/pull/13))
 ## 0.3.0 (July 26, 2018)
 
 FEATURES:

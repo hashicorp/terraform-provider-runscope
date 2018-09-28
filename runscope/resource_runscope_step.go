@@ -135,6 +135,10 @@ func resourceRunscopeStep() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"note": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -189,6 +193,7 @@ func resourceStepRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("headers", readHeaders(step.Headers))
 	d.Set("scripts", step.Scripts)
 	d.Set("before_scripts", step.BeforeScripts)
+	d.Set("note", step.Note)
 	if step.Auth != nil && len(step.Auth) > 0 {
 		d.Set("auth", []interface{}{
 			map[string]interface{}{
@@ -213,7 +218,8 @@ func resourceStepUpdate(d *schema.ResourceData, meta interface{}) error {
 		d.HasChange("variables") ||
 		d.HasChange("assertions") ||
 		d.HasChange("headers") ||
-		d.HasChange("body") {
+		d.HasChange("body") ||
+		d.HasChange("note") {
 		client := meta.(*runscope.Client)
 		_, err = client.UpdateTestStep(stepFromResource, bucketID, testID)
 
@@ -319,6 +325,10 @@ func createStepFromResourceData(d *schema.ResourceData) (*runscope.TestStep, str
 
 	if attr, ok := d.GetOk("before_scripts"); ok {
 		step.BeforeScripts = expandStringList(attr.([]interface{}))
+	}
+
+	if attr, ok := d.GetOk("note"); ok {
+		step.Note = attr.(string)
 	}
 
 	return step, bucketID, testID, nil

@@ -156,6 +156,10 @@ func testAccCheckStepMainPageExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Expected %s, actual %s", "log(\"before script\");", foundRecord.BeforeScripts[0])
 		}
 
+		if foundRecord.Note != "Testing step, single step test" {
+			return fmt.Errorf("Expected note %s, actual note %s", "Testing step, single step test", foundRecord.Note)
+		}
+
 		return nil
 	}
 }

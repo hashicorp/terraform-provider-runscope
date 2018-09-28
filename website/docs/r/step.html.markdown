@@ -20,6 +20,7 @@ resource "runscope_step" "main_page" {
   test_id        = "${runscope_test.test.id}"
   step_type      = "request"
   url            = "http://example.com"
+  note           = "A comment for the test step"
   method         = "GET"
   variables      = [
   	{
@@ -96,6 +97,7 @@ The following arguments are supported:
 
 * `bucket_id` - (Required) The id of the bucket to associate this step with.
 * `test_id` - (Required) The id of the test to associate this step with.
+* `note` = (Optional) A comment attached to the test step.
 * `step_type` - (Required) The type of step.
  * [request](#request-steps)
  * pause

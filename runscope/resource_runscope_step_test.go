@@ -156,6 +156,10 @@ func testAccCheckStepMainPageExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Expected %s, actual %s", "log(\"before script\");", foundRecord.BeforeScripts[0])
 		}
 
+		if foundRecord.Note != "Testing step, single step test" {
+			return fmt.Errorf("Expected note %s, actual note %s", "Testing step, single step test", foundRecord.Note)
+		}
+
 		return nil
 	}
 }
@@ -201,6 +205,7 @@ resource "runscope_step" "main_page" {
   bucket_id      = "${runscope_bucket.bucket.id}"
   test_id        = "${runscope_test.test.id}"
   step_type      = "request"
+  note           = "Testing step, single step test"
   url            = "http://example.com"
   method         = "GET"
   variables      = [
@@ -274,13 +279,15 @@ resource "runscope_step" "step_a" {
   bucket_id      = "${runscope_bucket.bucket.id}"
   test_id        = "${runscope_test.test_a.id}"
   step_type      = "request"
+  note           = "Multiple step test, test a"
   url            = "http://step_a.com"
   method         = "GET"
 }
 resource "runscope_step" "step_b" {
-  bucket_id      = "${runscope_bucket.bucket.id}"
+  bucket_id      = "${runscope_bucket.bucket.id}"c
   test_id        = "${runscope_test.test_a.id}"
   step_type      = "request"
+  note           = "Multiple step test, test b"
   url            = "http://step_b.com"
   method         = "GET"
 }

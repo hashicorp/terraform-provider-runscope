@@ -1,7 +1,7 @@
 ## 0.5.0 (Unreleased)
 ENHANCEMENTS:
 
-*  resource/runscope_step: New attributes `notes` added ([#16](https://github.com/terraform-providers/terraform-provider-runscope/pull/16))
+*  resource/runscope_step: New attributes `note` added ([#16](https://github.com/terraform-providers/terraform-provider-runscope/pull/16))
 
 ## 0.4.0 (September 22, 2018)
 ENHANCEMENTS:

@@ -1,4 +1,6 @@
 ## 0.5.0 (Unreleased)
+*  resource/runscope_step: New attributes `notes` added ([#16](https://github.com/terraform-providers/terraform-provider-runscope/pull/16))
+
 ## 0.4.0 (September 22, 2018)
 ENHANCEMENTS:
 *  resource/runscope_environment: New attributes `webhooks` and `emails` added ([#13](https://github.com/terraform-providers/terraform-provider-runscope/pull/13))

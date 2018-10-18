@@ -290,6 +290,7 @@ resource "runscope_step" "step_b" {
   note           = "Multiple step test, test b"
   url            = "http://step_b.com"
   method         = "GET"
+  after_step     = "${runscope_step.step_a.id}"
 }
 
 resource "runscope_test" "test_a" {

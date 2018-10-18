@@ -53,7 +53,7 @@ resource "runscope_step" "main_page" {
   },
   before_scripts  = [<<EOF
        var endVar = new Date();
-       var startVar = new Date(); 
+       var startVar = new Date();
        alert('this is a multi-line before script')
     EOF
   ],
@@ -104,6 +104,7 @@ The following arguments are supported:
  * condition
  * ghost
  * subtest
+* `after_step` - (Optional) The step this step is supposed to be run after (for ordering steps).
 
 ### Request steps
 When creating a `request` type of step the additional arguments also apply:

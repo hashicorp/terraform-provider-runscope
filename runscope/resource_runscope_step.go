@@ -139,13 +139,62 @@ func resourceRunscopeStep() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"after_step": &schema.Schema{
+			        Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
 
+func updateStepOrdering(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*runscope.Client)
+	thisStep, _, testID, err := createStepFromResourceData(d)
+	if err != nil {
+		return err
+	}
+	if afterStepID, ok := d.GetOkExists("after_step"); ok {
+		test, err := client.ReadTest(&runscope.Test{ID: testID})
+		if err != nil {
+			return err
+		}
+		stepList := test.Steps
+		var newStepList []*runscope.TestStep
+		for i := 0; i<len(stepList); i++{
+			if (stepList[i].ID == afterStepID) {
+				newStepList = append(newStepList, stepList[i], thisStep)
+			} else {
+				newStepList = append(newStepList, stepList[i])
+			}
+		}
+		test.Steps = newStepList
+		test, err = client.UpdateTest(test)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func getBeforeStep(step *runscope.TestStep, meta interface{}, testID string) (string, error) {
+	client := meta.(*runscope.Client)
+	test, err := client.ReadTest(&runscope.Test{ID: testID})
+	if err != nil {
+		return "", fmt.Errorf("Could not read Test")
+	}
+	stepList := test.Steps
+	for i := 0; i<len(stepList); i++ {
+		if (stepList[i].ID == step.ID && i != 0){
+			return stepList[i].ID, nil
+		} else {
+			return "", nil
+		}
+	}
+	return "", nil
+}
+
 func resourceStepCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*runscope.Client)
-
 	step, bucketID, testID, err := createStepFromResourceData(d)
 	if err != nil {
 		return err
@@ -160,7 +209,10 @@ func resourceStepCreate(d *schema.ResourceData, meta interface{}) error {
 
 	d.SetId(createdStep.ID)
 	log.Printf("[INFO] step ID: %s", d.Id())
-
+	err = updateStepOrdering(d, meta)
+	if err != nil {
+		return fmt.Errorf("Failed to update step ordering")
+	}
 	return resourceStepRead(d, meta)
 }
 
@@ -194,6 +246,11 @@ func resourceStepRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("scripts", step.Scripts)
 	d.Set("before_scripts", step.BeforeScripts)
 	d.Set("note", step.Note)
+	beforeStep, errBeforeStep := getBeforeStep(step, meta, testID)
+	if errBeforeStep != nil {
+		return errBeforeStep
+	}
+	d.Set("after_step", beforeStep)
 	if step.Auth != nil && len(step.Auth) > 0 {
 		d.Set("auth", []interface{}{
 			map[string]interface{}{
@@ -225,6 +282,12 @@ func resourceStepUpdate(d *schema.ResourceData, meta interface{}) error {
 
 		if err != nil {
 			return fmt.Errorf("Error updating step: %s", err)
+		}
+		if d.HasChange("after_step"){
+			err = updateStepOrdering(d, meta)
+		}
+		if err != nil {
+			return fmt.Errorf("Error updating step ordering")
 		}
 	}
 

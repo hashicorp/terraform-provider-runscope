@@ -37,10 +37,18 @@ func resourceRunscopeTest() *schema.Resource {
 			},
 			"default_environment_id": &schema.Schema{
 				Type:     schema.TypeString,
-				Computed: true,
+				Computed: false,
 			},
 		},
 	}
+}
+
+func resourceRequiresTwoPhase(d *schema.ResourceData) bool {
+
+	if _, ok := d.GetOk("default_environment_id"); ok {
+		return true
+	}
+	return false
 }
 
 func resourceTestCreate(d *schema.ResourceData, meta interface{}) error {
@@ -49,7 +57,7 @@ func resourceTestCreate(d *schema.ResourceData, meta interface{}) error {
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Creating test with name: %s", name)
 
-	test, err := createTestFromResourceData(d)
+	test, err := createTestFromResourceData(d, true)
 	if err != nil {
 		return fmt.Errorf("Failed to create test: %s", err)
 	}
@@ -59,6 +67,17 @@ func resourceTestCreate(d *schema.ResourceData, meta interface{}) error {
 	createdTest, err := client.CreateTest(test)
 	if err != nil {
 		return fmt.Errorf("Failed to create test: %s", err)
+	}
+	if resourceRequiresTwoPhase(d) {
+		testUpdate, err := createTestFromResourceData(d, false)
+		if err != nil {
+			return fmt.Errorf("Failed to create test: %s", err)
+		}
+		updatedTest, err := client.UpdateTest(testUpdate)
+		if err != nil {
+			return fmt.Errorf("Failed to create test: %s", err)
+		}
+		createdTest = updatedTest
 	}
 
 	d.SetId(createdTest.ID)
@@ -70,7 +89,7 @@ func resourceTestCreate(d *schema.ResourceData, meta interface{}) error {
 func resourceTestRead(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*runscope.Client)
 
-	testFromResource, err := createTestFromResourceData(d)
+	testFromResource, err := createTestFromResourceData(d, false)
 	if err != nil {
 		return fmt.Errorf("Error reading test: %s", err)
 	}
@@ -93,12 +112,13 @@ func resourceTestRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceTestUpdate(d *schema.ResourceData, meta interface{}) error {
 	d.Partial(false)
-	testFromResource, err := createTestFromResourceData(d)
+	testFromResource, err := createTestFromResourceData(d, true)
 	if err != nil {
 		return fmt.Errorf("Error updating test: %s", err)
 	}
 
-	if d.HasChange("description") {
+	if d.HasChange("description") ||
+		d.HasChange("default_environment_id") {
 		client := meta.(*runscope.Client)
 		_, err = client.UpdateTest(testFromResource)
 
@@ -113,7 +133,7 @@ func resourceTestUpdate(d *schema.ResourceData, meta interface{}) error {
 func resourceTestDelete(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*runscope.Client)
 
-	test, err := createTestFromResourceData(d)
+	test, err := createTestFromResourceData(d, false)
 	if err != nil {
 		return fmt.Errorf("Error deleting test: %s", err)
 	}
@@ -126,7 +146,7 @@ func resourceTestDelete(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func createTestFromResourceData(d *schema.ResourceData) (*runscope.Test, error) {
+func createTestFromResourceData(d *schema.ResourceData, init bool) (*runscope.Test, error) {
 
 	test := runscope.NewTest()
 	test.ID = d.Id()
@@ -140,6 +160,12 @@ func createTestFromResourceData(d *schema.ResourceData) (*runscope.Test, error) 
 
 	if attr, ok := d.GetOk("description"); ok {
 		test.Description = attr.(string)
+	}
+	// attributes that require create-then-update cycle
+	if !init {
+		if attr, ok := d.GetOk("default_environment_id"); ok {
+			test.DefaultEnvironmentID = attr.(string)
+		}
 	}
 
 	return test, nil

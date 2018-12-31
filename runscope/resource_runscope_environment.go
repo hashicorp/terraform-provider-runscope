@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 
-	"github.com/ewilde/go-runscope"
+	runscope "github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 )

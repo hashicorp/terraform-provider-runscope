@@ -3,7 +3,7 @@ package runscope
 import (
 	"log"
 
-	"github.com/ewilde/go-runscope"
+	runscope "github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 

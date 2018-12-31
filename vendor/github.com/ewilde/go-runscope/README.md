@@ -176,6 +176,35 @@ Client.UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Sch
 
 Client.DeleteSchedule(schedule *Schedule, bucketKey string, testID string) error
 ```
+### Unit Testing
+You can now mock client data:
+
+```
+type MockClient struct {
+}
+
+func (client *MockClient) ListBuckets() ([]*runscope.Bucket, error) {
+ 	bucket1 := &runscope.Bucket{}
+ 	bucket2 := &runscope.Bucket{}
+ 	bucket1.Name = "MyBucket"
+ 	bucket2.Name = "MyNonExistingBucket"
+ 	return []*runscope.Bucket{bucket1, bucket2}, nil
+ }
+ ```
+Then you can use this mockClient in your Unit Test:
+```
+func TestReadBucket(t *testing.T) {
+	t.Run("Successful return bucket", func(t *testing.T) {
+		client := &resources.MockClient{}
+		getBucket := ReadBucket("MyBucket", client)
+
+		if getBucket == nil {
+			t.Error("Should have returned a bucket")
+		}
+	})
+}
+```
+
 ## Developing
 ### Running the tests
 By default the tests requiring access to the runscope api (most of them)
@@ -187,7 +216,7 @@ environment variables.
 ```bash
 RUNSCOPE_ACC=true
 RUNSCOPE_ACCESS_TOKEN={your access token}
-RUNSCOPE_TEAM_UUID={your team uuid}
+RUNSCOPE_TEAM_ID={your team uuid}
 ```
 Access tokens can be created using the [applications](https://www.runscope.com/applications)
 section of your runscope account.
@@ -202,4 +231,3 @@ Your team url can be found by taking the uuid from https://www.runscope.com/team
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-

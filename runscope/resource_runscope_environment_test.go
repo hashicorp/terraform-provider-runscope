@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ewilde/go-runscope"
+	runscope "github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -297,7 +297,8 @@ resource "runscope_environment" "environmentB" {
 	}
   ]
 
-  retry_on_failure = true
+	retry_on_failure = true
+	webhooks = ["https://example.com"]
   verify_ssl = false
 }
 

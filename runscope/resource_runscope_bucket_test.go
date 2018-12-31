@@ -8,7 +8,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ewilde/go-runscope"
+	runscope "github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )

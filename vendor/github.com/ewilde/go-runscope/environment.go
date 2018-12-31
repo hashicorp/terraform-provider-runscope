@@ -63,6 +63,11 @@ func (client *Client) CreateTestEnvironment(environment *Environment, test *Test
 		test.Bucket.Key, test.ID))
 }
 
+// ListSharedEnvironment lists all shared environments for a given bucket. See https://www.runscope.com/docs/api/environments#list-shared
+func (client *Client) ListSharedEnvironment(bucket *Bucket) ([]*Environment, error) {
+	return client.listEnvironments(bucket, fmt.Sprintf("/buckets/%s/environments", bucket.Key))
+}
+
 // ReadSharedEnvironment lists details about an existing shared environment. See https://www.runscope.com/docs/api/environments#detail
 func (client *Client) ReadSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error) {
 	return client.readEnvironment(environment, fmt.Sprintf("/buckets/%s/environments/%s",
@@ -116,6 +121,20 @@ func (client *Client) createEnvironment(environment *Environment, endpoint strin
 	return newEnvironment, nil
 }
 
+func (client *Client) listEnvironments(bucket *Bucket, endpoint string) ([]*Environment, error) {
+	resource, error := client.readResource("environments", bucket.Key, endpoint)
+	if error != nil {
+		return nil, error
+	}
+
+	list, error := getEnvironmentsFromResponse(resource.Data)
+	if error != nil {
+		return nil, error
+	}
+
+	return list, nil
+}
+
 func (client *Client) readEnvironment(environment *Environment, endpoint string) (*Environment, error) {
 	resource, error := client.readResource("environment", environment.ID, endpoint)
 	if error != nil {
@@ -148,4 +167,10 @@ func getEnvironmentFromResponse(response interface{}) (*Environment, error) {
 	environment := new(Environment)
 	err := decode(environment, response)
 	return environment, err
+}
+
+func getEnvironmentsFromResponse(response interface{}) ([]*Environment, error) {
+	var environments []*Environment
+	err := decode(&environments, response)
+	return environments, err
 }

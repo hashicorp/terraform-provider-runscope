@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ewilde/go-runscope"
+	runscope "github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -31,6 +31,7 @@ func TestAccStep_basic(t *testing.T) {
 
 func TestAccStep_multiple_steps(t *testing.T) {
 	teamID := os.Getenv("RUNSCOPE_TEAM_ID")
+	fmt.Printf("TF_ACC: %s\n", os.Getenv("TF_ACC"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -40,6 +41,7 @@ func TestAccStep_multiple_steps(t *testing.T) {
 				Config: fmt.Sprintf(testRunscopeStepConfigMultipleSteps, teamID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckStepExists("runscope_step.step_a"),
+					testAccCheckStepOrder("runscope_test.test_a"),
 					resource.TestCheckResourceAttr(
 						"runscope_step.step_a", "url", "http://step_a.com"),
 					resource.TestCheckResourceAttr(
@@ -200,6 +202,45 @@ func testAccCheckStepExists(n string) resource.TestCheckFunc {
 	}
 }
 
+func testAccCheckStepOrder(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[n]
+
+		if !ok {
+			return fmt.Errorf("Not found: %s", n)
+		}
+
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("No Record ID is set")
+		}
+
+		client := testAccProvider.Meta().(*runscope.Client)
+
+		var test *runscope.Test
+		var err error
+
+		bucketID := rs.Primary.Attributes["bucket_id"]
+		test, err = client.ReadTest(&runscope.Test{ID: rs.Primary.ID, Bucket: &runscope.Bucket{Key: bucketID}})
+
+		if err != nil {
+			return err
+		}
+
+		if test.ID != rs.Primary.ID {
+			return fmt.Errorf("Record not found")
+		}
+
+		if test.Steps[0].URL != "http://step_a.com" {
+			return fmt.Errorf("Steps not in correct order, want http://step_a.com got %s", test.Steps[0].URL)
+		}
+
+		if test.Steps[1].URL != "http://step_b.com" {
+			return fmt.Errorf("Steps not in correct order, want http://step_a.com got %s", test.Steps[1].URL)
+		}
+		return nil
+	}
+}
+
 const testRunscopeStepConfigA = `
 resource "runscope_step" "main_page" {
   bucket_id      = "${runscope_bucket.bucket.id}"
@@ -290,6 +331,7 @@ resource "runscope_step" "step_b" {
   note           = "Multiple step test, test b"
   url            = "http://step_b.com"
   method         = "GET"
+  depends_on     = ["runscope_step.step_a"]
 }
 
 resource "runscope_test" "test_a" {

@@ -47,6 +47,22 @@ func (client *Client) ReadSchedule(schedule *Schedule, bucketKey string, testID 
 	return readSchedule, nil
 }
 
+// ListSchedules list all the schedules for a given test. See https://www.runscope.com/docs/api/schedules#list
+func (client *Client) ListSchedules(bucketKey string, testID string) ([]*Schedule, error) {
+	resource, error := client.readResource("[]schedule", testID,
+		fmt.Sprintf("/buckets/%s/tests/%s/schedules", bucketKey, testID))
+	if error != nil {
+		return nil, error
+	}
+
+	readSchedules, error := getSchedulesFromResponse(resource.Data)
+	if error != nil {
+		return nil, error
+	}
+
+	return readSchedules, nil
+}
+
 // UpdateSchedule updates an existing test schedule. See https://www.runscope.com/docs/api/schedules#modify
 func (client *Client) UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error) {
 	resource, error := client.updateResource(schedule, "schedule", schedule.ID,
@@ -73,4 +89,10 @@ func getScheduleFromResponse(response interface{}) (*Schedule, error) {
 	schedule := new(Schedule)
 	err := decode(schedule, response)
 	return schedule, err
+}
+
+func getSchedulesFromResponse(response interface{}) ([]*Schedule, error) {
+	var schedules []*Schedule
+	err := decode(&schedules, response)
+	return schedules, err
 }

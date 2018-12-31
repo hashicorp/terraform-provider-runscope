@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/ewilde/go-runscope"
+	runscope "github.com/ewilde/go-runscope"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 

@@ -5,18 +5,50 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/hashicorp/go-cleanhttp"
-	"io/ioutil"
-	"log"
 	"strings"
 	"sync"
+
+	"github.com/hashicorp/go-cleanhttp"
 )
 
 // APIURL is the default runscope api uri
 const APIURL = "https://api.runscope.com"
+
+// ClientAPI interface for mocking data in unit tests
+type ClientAPI interface {
+	CreateBucket(bucket *Bucket) (*Bucket, error)
+	CreateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+	CreateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+	CreateTest(test *Test) (*Test, error)
+	CreateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
+	CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+	DeleteBucket(key string) error
+	DeleteBuckets(predicate func(bucket *Bucket) bool) error
+	DeleteEnvironment(environment *Environment, bucket *Bucket) error
+	DeleteSchedule(schedule *Schedule, bucketKey string, testID string) error
+	DeleteTest(test *Test) error
+	DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error
+	ListBuckets() ([]*Bucket, error)
+	ListTests(input *ListTestsInput) ([]*Test, error)
+	ListAllTests(input *ListTestsInput) ([]*Test, error)
+	ListSchedules(bucketKey string, testID string) ([]*Schedule, error)
+	ListIntegrations(teamID string) ([]*Integration, error)
+	ListPeople(teamID string) ([]*People, error)
+	ReadBucket(key string) (*Bucket, error)
+	ReadSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+	ReadSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+	ReadTest(test *Test) (*Test, error)
+	ReadTestEnvironment(environment *Environment, test *Test) (*Environment, error)
+	ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+	UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+	UpdateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+	UpdateTest(test *Test) (*Test, error)
+	UpdateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
+	UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+}
 
 // Client provides access to create, read, update and delete runscope resources
 type Client struct {
@@ -58,16 +90,25 @@ func NewClient(apiURL string, accessToken string) *Client {
 	return &client
 }
 
+// NewClientAPI Interface initialization
+func NewClientAPI(apiURL string, accessToken string) ClientAPI {
+	return &Client{
+		APIURL:      apiURL,
+		AccessToken: accessToken,
+		HTTP:        cleanhttp.DefaultClient(),
+	}
+}
+
 func (client *Client) createResource(
 	resource interface{}, resourceType string, resourceName string, endpoint string) (*response, error) {
-	log.Printf("[DEBUG] creating %s %s", resourceType, resourceName)
+	DebugF(1, "creating %s %s", resourceType, resourceName)
 
 	bytes, err := json.Marshal(resource)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("[DEBUG] 	request: POST %s %s", endpoint, string(bytes))
+	DebugF(2, "	request: POST %s %s", endpoint, string(bytes))
 
 	req, err := client.newRequest("POST", endpoint, bytes)
 	if err != nil {
@@ -82,7 +123,7 @@ func (client *Client) createResource(
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] 	response: %d %s", resp.StatusCode, bodyString)
+	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
@@ -101,7 +142,7 @@ func (client *Client) createResource(
 }
 
 func (client *Client) readResource(resourceType string, resourceName string, endpoint string) (*response, error) {
-	log.Printf("[DEBUG] reading %s %s", resourceType, resourceName)
+	DebugF(1, "reading %s %s", resourceType, resourceName)
 	response := new(response)
 
 	req, err := client.newRequest("GET", endpoint, nil)
@@ -109,16 +150,19 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 		return response, err
 	}
 
-	log.Printf("[DEBUG] 	request: GET %s", endpoint)
+	DebugF(2, "	request: GET %s", endpoint)
 	resp, err := client.HTTP.Do(req)
 	if err != nil {
 		return response, err
 	}
 	defer resp.Body.Close()
 
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return response, err
+	}
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] 	response: %d %s", resp.StatusCode, bodyString)
+	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
@@ -126,24 +170,25 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 			return response, fmt.Errorf("Status: %s Error reading %s: %s",
 				resp.Status, resourceType, resourceName)
 		}
-
 		return response, fmt.Errorf("Status: %s Error reading %s: %s, reason: %q",
 			resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 	}
 
-	json.Unmarshal(bodyBytes, &response)
+	if err = json.Unmarshal(bodyBytes, &response); err != nil {
+		return response, fmt.Errorf("failed to Unmarshal response body: %v", err)
+	}
 	return response, nil
 }
 
 func (client *Client) updateResource(resource interface{}, resourceType string, resourceName string, endpoint string) (*response, error) {
-	log.Printf("[DEBUG] updating %s %s", resourceType, resourceName)
+	DebugF(1, "updating %s %s", resourceType, resourceName)
 	response := response{}
 	bytes, err := json.Marshal(resource)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("[DEBUG] 	request: PUT %s %s", endpoint, string(bytes))
+	DebugF(2, "	request: PUT %s %s", endpoint, string(bytes))
 	req, err := client.newRequest("PUT", endpoint, bytes)
 	if err != nil {
 		return &response, err
@@ -157,7 +202,7 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] 	response: %d %s", resp.StatusCode, bodyString)
+	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
@@ -175,15 +220,15 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 }
 
 func (client *Client) deleteResource(resourceType string, resourceName string, endpoint string) error {
-	log.Printf("[DEBUG] deleting %s %s", resourceType, resourceName)
+	DebugF(1, "deleting %s %s", resourceType, resourceName)
 	req, err := client.newRequest("DELETE", endpoint, nil)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[DEBUG] 	request: DELETE %s", endpoint)
+	DebugF(2, "	request: DELETE %s", endpoint)
 	resp, err := client.HTTP.Do(req)
-	log.Printf("[DEBUG] 	response: %d", resp.StatusCode)
+	DebugF(2, "	response: %d", resp.StatusCode)
 	if err != nil {
 		return err
 	}
@@ -192,7 +237,7 @@ func (client *Client) deleteResource(resourceType string, resourceName string, e
 	if resp.StatusCode >= 300 {
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		log.Printf("[DEBUG] %s", bodyString)
+		DebugF(2, "%s", bodyString)
 
 		errorResp := new(errorResponse)
 		if err = json.Unmarshal(bodyBytes, &errorResp); err != nil {

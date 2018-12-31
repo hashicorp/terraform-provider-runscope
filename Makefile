@@ -11,7 +11,7 @@ testacc: goimportscheck
 	@test "${RUNSCOPE_ACCESS_TOKEN}" || (echo '$$RUNSCOPE_ACCESS_TOKEN required' && exit 1)
 	@test "${RUNSCOPE_TEAM_ID}" || (echo '$$RUNSCOPE_TEAM_ID required' && exit 1)
 
-	go test -count=1 -v ./runscope -run="TestAcc" -timeout 20m -sweep "eu-west-1"
+	go test -v -count=1 ./runscope -run="TestAcc" -timeout 20m -sweep "eu-west-1"
 
 build: goimportscheck vet
 	@go install

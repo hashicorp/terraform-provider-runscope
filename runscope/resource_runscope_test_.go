@@ -20,22 +20,22 @@ func resourceRunscopeTest() *schema.Resource {
 		Delete: resourceTestDelete,
 
 		Schema: map[string]*schema.Schema{
-			"bucket_id": &schema.Schema{
+			"bucket_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: false,
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: false,
 			},
-			"default_environment_id": &schema.Schema{
+			"default_environment_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

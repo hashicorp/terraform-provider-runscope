@@ -18,12 +18,12 @@ func resourceRunscopeBucket() *schema.Resource {
 			State: resourceBucketImport,
 		},
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"team_uuid": &schema.Schema{
+			"team_uuid": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,

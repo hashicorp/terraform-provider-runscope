@@ -21,56 +21,56 @@ func resourceRunscopeEnvironment() *schema.Resource {
 		Delete: resourceEnvironmentDelete,
 
 		Schema: map[string]*schema.Schema{
-			"bucket_id": &schema.Schema{
+			"bucket_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"test_id": &schema.Schema{
+			"test_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: false,
 			},
-			"script": &schema.Schema{
+			"script": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: false,
 			},
-			"preserve_cookies": &schema.Schema{
+			"preserve_cookies": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				ForceNew: false,
 			},
-			"initial_variables": &schema.Schema{
+			"initial_variables": {
 				Type:     schema.TypeMap,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 				ForceNew: false,
 			},
-			"integrations": &schema.Schema{
+			"integrations": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"regions": &schema.Schema{
+			"regions": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"remote_agents": &schema.Schema{
+			"remote_agents": {
 				Type: schema.TypeSet,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"name": &schema.Schema{
+						"name": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"uuid": &schema.Schema{
+						"uuid": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
@@ -78,55 +78,55 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				},
 				Optional: true,
 			},
-			"retry_on_failure": &schema.Schema{
+			"retry_on_failure": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
-			"verify_ssl": &schema.Schema{
+			"verify_ssl": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  true,
 			},
-			"webhooks": &schema.Schema{
+			"webhooks": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set:      schema.HashString,
 			},
-			"emails": &schema.Schema{
+			"emails": {
 				Type:     schema.TypeList,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"notify_all": &schema.Schema{
+						"notify_all": {
 							Type:     schema.TypeBool,
 							Required: true,
 						},
-						"notify_on": &schema.Schema{
+						"notify_on": {
 							Type:     schema.TypeString,
 							Required: true,
 							ValidateFunc: validation.StringInSlice([]string{
 								"all", "failures", "threshold", "switch",
 							}, false),
 						},
-						"notify_threshold": &schema.Schema{
+						"notify_threshold": {
 							Type:     schema.TypeInt,
 							Required: true,
 						},
-						"recipients": &schema.Schema{
+						"recipients": {
 							Type:     schema.TypeSet,
 							Required: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"name": &schema.Schema{
+									"name": {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
-									"id": &schema.Schema{
+									"id": {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
-									"email": &schema.Schema{
+									"email": {
 										Type:     schema.TypeString,
 										Optional: true,
 									},

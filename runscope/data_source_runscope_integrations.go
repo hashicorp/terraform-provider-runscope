@@ -17,7 +17,7 @@ func dataSourceRunscopeIntegrations() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"filter": &schema.Schema{
+			"filter": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				ForceNew: true,
@@ -35,7 +35,7 @@ func dataSourceRunscopeIntegrations() *schema.Resource {
 					},
 				},
 			},
-			"ids": &schema.Schema{
+			"ids": {
 				Type:     schema.TypeSet,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},

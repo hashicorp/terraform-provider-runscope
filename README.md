@@ -240,10 +240,19 @@ $ $GOPATH/bin/terraform-provider-runscope
 | RUNSCOPE_INTEGRATION_DESC | Description that matches a pre-existing runscope integration associated with your account  |
 
 ## Vendoring / dependency management
-Dependencies are managed using `govendor`
+Dependencies are managed using [Go Modules](https://github.com/golang/go/wiki/Modules)
 
 ### Add or update a dependency
-`govendor fetch -v {import}`
+
+```
+$ GO111MODULE=on go get <module>@<version>
+$ GO111MODULE=on go mod tidy
+```
+
+For the time being we will continue to vendor
+```
+$ GO111MODULE=on go mod vendor
+```
 
 ## Releasing
 Releases are automatically setup to go out from the master branch after a build is made on master with a tag.

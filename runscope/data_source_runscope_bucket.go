@@ -20,7 +20,7 @@ func dataSourceRunscopeBucket() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"team_uuid": &schema.Schema{
+			"team_uuid": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

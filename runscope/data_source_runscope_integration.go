@@ -17,7 +17,7 @@ func dataSourceRunscopeIntegration() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"filter": &schema.Schema{
+			"filter": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				ForceNew: true,

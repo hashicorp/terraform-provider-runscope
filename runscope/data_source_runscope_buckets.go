@@ -13,7 +13,7 @@ func dataSourceRunscopeBuckets() *schema.Resource {
 		Read: dataSourceRunscopeBucketsRead,
 
 		Schema: map[string]*schema.Schema{
-			"filter": &schema.Schema{
+			"filter": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				ForceNew: true,
@@ -31,7 +31,7 @@ func dataSourceRunscopeBuckets() *schema.Resource {
 					},
 				},
 			},
-			"keys": &schema.Schema{
+			"keys": {
 				Type:     schema.TypeSet,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},

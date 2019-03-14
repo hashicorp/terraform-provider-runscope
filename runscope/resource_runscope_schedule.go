@@ -16,27 +16,27 @@ func resourceRunscopeSchedule() *schema.Resource {
 		Delete: resourceScheduleDelete,
 
 		Schema: map[string]*schema.Schema{
-			"bucket_id": &schema.Schema{
+			"bucket_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"test_id": &schema.Schema{
+			"test_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"environment_id": &schema.Schema{
+			"environment_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"interval": &schema.Schema{
+			"interval": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
-			"note": &schema.Schema{
+			"note": {
 				Type:     schema.TypeString,
 				Required: false,
 				Optional: true,

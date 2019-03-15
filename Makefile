@@ -24,11 +24,11 @@ build-gox: deps goimportscheck vet
 	-output="pkg/{{.OS}}_{{.Arch}}/terraform-provider-runscope" .
 
 release:
-	go get github.com/goreleaser/goreleaser; \
+	GO111MODULE=off go get github.com/goreleaser/goreleaser; \
 	goreleaser; \
 
 deps:
-	go get -u github.com/mitchellh/gox
+	GO111MODULE=off go get -u github.com/mitchellh/gox
 
 clean:
 	rm -rf pkg/
@@ -89,4 +89,4 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
-.PHONY: build test testacc vet goimports goimportscheck fmt fmtcheck errcheck errcheck vendor-status lint test-compile website website-test
+.PHONY: build test testacc vet goimports goimportscheck fmt fmtcheck errcheck errcheck lint test-compile website website-test

@@ -16,44 +16,44 @@ func resourceRunscopeStep() *schema.Resource {
 		Update: resourceStepUpdate,
 		Delete: resourceStepDelete,
 		Schema: map[string]*schema.Schema{
-			"bucket_id": &schema.Schema{
+			"bucket_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"test_id": &schema.Schema{
+			"test_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"step_type": &schema.Schema{
+			"step_type": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"method": &schema.Schema{
+			"method": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
-			"url": &schema.Schema{
+			"url": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: false,
 			},
-			"variables": &schema.Schema{
+			"variables": {
 				Type: schema.TypeSet,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"name": &schema.Schema{
+						"name": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"property": &schema.Schema{
+						"property": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"source": &schema.Schema{
+						"source": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
@@ -61,23 +61,23 @@ func resourceRunscopeStep() *schema.Resource {
 				},
 				Optional: true,
 			},
-			"assertions": &schema.Schema{
+			"assertions": {
 				Type: schema.TypeList,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"source": &schema.Schema{
+						"source": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"property": &schema.Schema{
+						"property": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"comparison": &schema.Schema{
+						"comparison": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"value": &schema.Schema{
+						"value": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
@@ -85,16 +85,16 @@ func resourceRunscopeStep() *schema.Resource {
 				},
 				Optional: true,
 			},
-			"headers": &schema.Schema{
+			"headers": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"header": &schema.Schema{
+						"header": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"value": &schema.Schema{
+						"value": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
@@ -125,17 +125,17 @@ func resourceRunscopeStep() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"scripts": &schema.Schema{
+			"scripts": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"before_scripts": &schema.Schema{
+			"before_scripts": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"note": &schema.Schema{
+			"note": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},

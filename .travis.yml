@@ -1,6 +1,6 @@
 language: go
 go:
-- 1.10.x
+  - "1.11.x"
 script:
 - make
 install:
@@ -8,6 +8,7 @@ install:
 - go get golang.org/x/tools/cmd/goimports
 env:
   global:
+    - GOFLAGS=-mod=vendor GO111MODULE=on
   - |
     RUNSCOPE_INTEGRATION_DESC="Slack: #test1 channel, send message on all test runs"
   - secure: M0bcxxYW2YX8FkqlkYlVyTxk9PS5TVKQ2uY59iAi1yIwybv4wShuRrUnc13LH3kg+/mf29kIUcnPT6ohYYdAMVMZbRFoQiF43gFrDjm8jU4Ow1kFOfb0G+JBWw8dYD5tNRgb4Ge++Z/GkagobuPfGYTgh+RzCuzWgHuG1JZMEv0CVtFALhLGd4WmzXPHFa+trE61cQLE7o6G1JJZBa2VurQrJOwFfJXj+R9fDaB7eKVQAvIPrFobsQpA36OHHTRmFKyqOj1HBGPssAvaOPux+m96WGYkdvr/+j3DaIr0SCyZUHb2cr/WgTudCHd1aJtfc90du1jihCYL02UGROKp9dW2c6tR+0Y/ce3//gub/M3z+6yKaVlLMnQmirOuWmPsWTRPRIE4NLIx8fCvgP1riFfARVnCNV1M3ndjUxcTHN8cS8yScq+DM8tLdWJ5hWCLCGVkCtSWK0/4Ck1MSYl8KgYW6cX7yNDiXnWkWPskXnfSQ4nWPzSwyc+a/W5Xs4Kz0c/Cz2ar2p6vEksWruq+BYP6JPec1/uznPk618yz6+c3OVQS29IFY0hg8DZIIjxTc5P1+CwbROiZ0CSxYOqFcCtSNsVn6s6W5JrjflM7+tyyjKlCfEJSOJWmvQy/EytnpAtuabu7E2XnFoVExxEZovBQw07upWhL7CYe1xSBz14=

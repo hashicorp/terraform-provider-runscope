@@ -41,6 +41,7 @@ func resourceRunscopeStep() *schema.Resource {
 				Optional: true,
 				ForceNew: false,
 			},
+			// TODO: rename to "variable" for better UX
 			"variables": {
 				Type: schema.TypeSet,
 				Elem: &schema.Resource{
@@ -61,6 +62,7 @@ func resourceRunscopeStep() *schema.Resource {
 				},
 				Optional: true,
 			},
+			// TODO: rename to "assertion" for better UX
 			"assertions": {
 				Type: schema.TypeList,
 				Elem: &schema.Resource{
@@ -85,6 +87,7 @@ func resourceRunscopeStep() *schema.Resource {
 				},
 				Optional: true,
 			},
+			// TODO: rename to "header" for better UX
 			"headers": {
 				Type:     schema.TypeSet,
 				Optional: true,

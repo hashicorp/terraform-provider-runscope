@@ -24,15 +24,15 @@ provider "runscope" {
 
 # Create a bucket
 resource "runscope_bucket" "main" {
-  name         = "terraform-ftw"
-  team_uuid    = "870ed937-bc6e-4d8b-a9a5-d7f9f2412fa3"
+  name      = "terraform-ftw"
+  team_uuid = "870ed937-bc6e-4d8b-a9a5-d7f9f2412fa3"
 }
 
 # Create a test in the bucket
 resource "runscope_test" "api" {
-  name         = "api-test"
-  description  = "checks the api is up and running"
-  bucket_id    = "${runscope_bucket.main.id}"
+  name        = "api-test"
+  description = "checks the api is up and running"
+  bucket_id   = "${runscope_bucket.main.id}"
 }
 ```
 

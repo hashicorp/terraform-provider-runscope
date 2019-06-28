@@ -62,6 +62,7 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			// TODO: rename this to remote_agent for UX
 			"remote_agents": {
 				Type: schema.TypeSet,
 				Elem: &schema.Resource{
@@ -93,6 +94,7 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set:      schema.HashString,
 			},
+			// TODO: rename this to "email"
 			"emails": {
 				Type:     schema.TypeList,
 				MaxItems: 1,
@@ -113,6 +115,7 @@ func resourceRunscopeEnvironment() *schema.Resource {
 							Type:     schema.TypeInt,
 							Required: true,
 						},
+						// TODO: rename this to "recipient"
 						"recipients": {
 							Type:     schema.TypeSet,
 							Required: true,

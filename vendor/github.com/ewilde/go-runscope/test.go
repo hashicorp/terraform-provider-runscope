@@ -3,8 +3,15 @@ package runscope
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"time"
 )
+
+type ReadMetricsInput struct {
+	Region          string
+	Timeframe       string
+	EnvironemntUUID string
+}
 
 // Test represents the details for a runscope test. See https://www.runscope.com/docs/api/tests
 type Test struct {
@@ -71,6 +78,28 @@ type Assertion struct {
 // Script not sure how this is used, currently not documented, but looks like a javascript string that gets evaluated? See See https://www.runscope.com/docs/api/steps
 type Script struct {
 	Value string `json:"value"`
+}
+
+type TestMetric struct {
+	ResponseTimes        []ResponseTime  `json:"response_times"`
+	EnvironemntUUID      string          `json:"environment_uuid,omitempty"`
+	Region               string          `json:"region,omitempty"`
+	Timeframe            string          `json:"timeframe,omitempty"`
+	ThisTimePeriod       TimePeriodMetic `json:"this_time_period"`
+	ChangeFromLastPeriod TimePeriodMetic `json:"change_from_last_period"`
+}
+
+type ResponseTime struct {
+	SuccessRatio          float64 `json:"success_ratio,omitempty"`
+	Timestamp             int64   `json:"timestamp,omitempty"`
+	AverageResponseTimeMs int     `json:"avg_response_time_ms,omitempty"`
+}
+
+type TimePeriodMetic struct {
+	ResponseTime50thPercentile float64 `json:"response_time_50th_percentile,omitempty"`
+	ResponseTime95thPercentile float64 `json:"response_time_95th_percentile,omitempty"`
+	ResponseTime99thPercentile float64 `json:"response_time_99th_percentile,omitempty"`
+	TotalTestRuns              float64 `json:"total_test_runs,omitempty"`
 }
 
 /*
@@ -152,6 +181,53 @@ func (client *Client) UpdateTest(test *Test) (*Test, error) {
 // DeleteTest delete an existing test. See https://www.runscope.com/docs/api/tests#delete
 func (client *Client) DeleteTest(test *Test) error {
 	return client.deleteResource("test", test.ID, fmt.Sprintf("/buckets/%s/tests/%s", test.Bucket.Key, test.ID))
+}
+
+// ReadTestMetrics retrieves metrics for a test. See https://www.runscope.com/docs/api/metrics
+func (client *Client) ReadTestMetrics(test *Test, input *ReadMetricsInput) (*TestMetric, error) {
+
+	region := input.Region
+	timeframe := input.Timeframe
+	environmentUUID := input.EnvironemntUUID
+	if region == "" {
+		region = "all"
+	}
+	if timeframe == "" {
+		timeframe = "month"
+	}
+	if environmentUUID == "" {
+		environmentUUID = "all"
+	}
+
+	DebugF(2, "	reading %s %s", "metrics", test.ID)
+
+	endpoint := fmt.Sprintf("/buckets/%s/tests/%s/metrics?region=%s&timeframe=%s&environment_uuid=%s",
+		test.Bucket.Key, test.ID, region, timeframe, environmentUUID)
+
+	DebugF(2, "	request: GET %s", endpoint)
+	req, err := client.newRequest("GET", endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := client.HTTP.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	bodyString := string(bodyBytes)
+	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
+
+	readTestMetrics := &TestMetric{}
+	err = json.Unmarshal(bodyBytes, readTestMetrics)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return readTestMetrics, nil
 }
 
 func (test *Test) String() string {

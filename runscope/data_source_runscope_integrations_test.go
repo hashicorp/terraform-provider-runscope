@@ -44,7 +44,7 @@ func testAccDataSourceRunscopeIntegrations(dataSource string) resource.TestCheck
 const testAccDataSourceRunscopeIntegrationsConfig = `
 data "runscope_integrations" "by_type" {
 	team_uuid = "%s"
-	filter = {
+	filter {
 		name = "type"
 		values = ["slack"]
 	}
@@ -110,7 +110,7 @@ func testAccCheckEnvironmentIntegrations(environment string, expected bool) reso
 const testAccDataSourceRunscopeIntegrationsUsageConfig = `
 data "runscope_integrations" "slack" {
 	team_uuid = "%[1]v"
-	filter = {
+	filter {
 		name = "type"
 		values = ["slack"]
 	}
@@ -118,7 +118,7 @@ data "runscope_integrations" "slack" {
 
 data "runscope_integrations" "empty" {
 	team_uuid = "%[1]v"
-	filter = {
+	filter {
 		name = "type"
 		values = ["unknown"]
 	}
@@ -128,14 +128,14 @@ resource "runscope_environment" "environment_with_integrations" {
   bucket_id    = "${runscope_bucket.bucket.id}"
   name         = "test-environment-1"
 
-  integrations = ["${data.runscope_integrations.slack.ids}"]
+  integrations = data.runscope_integrations.slack.ids
 }
 
 resource "runscope_environment" "environment_no_integrations" {
   bucket_id    = "${runscope_bucket.bucket.id}"
   name         = "test-environment-2"
 
-  integrations = ["${data.runscope_integrations.empty.ids}"]
+  integrations = data.runscope_integrations.empty.ids
 }
 
 resource "runscope_bucket" "bucket" {

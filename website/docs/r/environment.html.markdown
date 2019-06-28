@@ -23,22 +23,22 @@ use a [Shared Environment](https://www.runscope.com/docs/api-testing/environment
 
 ```hcl
 resource "runscope_environment" "environment" {
-  bucket_id    = "${runscope_bucket.bucket.id}"
-  name         = "shared-environment"
+  bucket_id = "${runscope_bucket.bucket.id}"
+  name      = "shared-environment"
 
   integrations = [
     "${data.runscope_integration.pagerduty.id}"
   ]
 
-  initial_variables {
-    var1 = "true",
+  initial_variables = {
+    var1 = "true"
     var2 = "value2"
   }
 }
 
 data "runscope_integration" "pagerduty" {
   team_uuid = "%s"
-  type = "pagerduty"
+  type      = "pagerduty"
 }
 ```
 ### Creating a test environment
@@ -47,36 +47,36 @@ data "runscope_integration" "pagerduty" {
 
 ```hcl
 resource "runscope_environment" "environment" {
-  bucket_id    = "${runscope_bucket.bucket.id}"
-  test_id      = "${runscope_test.api.id}
-  name         = "test-environment"
+  bucket_id = "${runscope_bucket.bucket.id}"
+  test_id   = "${runscope_test.api.id}"
+  name      = "test-environment"
 
-  integrations = [ 
+  integrations = [
     "${data.runscope_integration.pagerduty.id}"
   ]
 
-  initial_variables {
-    var1 = "true",
+  initial_variables = {
+    var1 = "true"
     var2 = "value2"
   }
 }
 
 data "runscope_integration" "pagerduty" {
   team_uuid = "194204f3-19a3-4ef7-a492-b14a277025da"
-  type = "pagerduty"
+  type      = "pagerduty"
 }
 
 # Add a test to a bucket
 resource "runscope_test" "api" {
-  name         = "api-test"
-  description  = "checks the api is up and running"
-  bucket_id    = "${runscope_bucket.main}"
+  name        = "api-test"
+  description = "checks the api is up and running"
+  bucket_id   = "${runscope_bucket.main}"
 }
 
 # Create a bucket
 resource "runscope_bucket" "main" {
-  name         = "terraform-ftw"
-  team_uuid    = "870ed937-bc6e-4d8b-a9a5-d7f9f2412fa3"
+  name      = "terraform-ftw"
+  team_uuid = "870ed937-bc6e-4d8b-a9a5-d7f9f2412fa3"
 }
 ```
 

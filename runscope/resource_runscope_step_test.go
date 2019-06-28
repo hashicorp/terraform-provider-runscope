@@ -249,46 +249,43 @@ resource "runscope_step" "main_page" {
   note           = "Testing step, single step test"
   url            = "http://example.com"
   method         = "GET"
-  variables      = [
-  	{
+  variables {
   	   name     = "httpStatus"
   	   source   = "response_status"
-  	},
-  	{
+  	}
+  	variables {
   	   name     = "httpContentEncoding"
   	   source   = "response_header"
   	   property = "Content-Encoding"
-  	},
-  ]
-  assertions     = [
-  	{
+  	}
+  
+  assertions {
   	   source     = "response_status"
            comparison = "equal_number"
            value      = "200"
-  	},
-  	{
+  	}
+  	assertions {
   	   source     = "response_json"
            comparison = "equal"
-           value      = "c5baeb4a-2379-478a-9cda-1b671de77cf9",
+           value      = "c5baeb4a-2379-478a-9cda-1b671de77cf9"
            property   = "data.id"
-  	},
-  ]
-  headers        = [
-  	{
-  		header = "Accept-Encoding",
+  	}
+  
+  headers 	{
+  		header = "Accept-Encoding"
   		value  = "application/json"
-  	},
-  	{
-  		header = "Accept-Encoding",
+  	}
+  	headers {
+  		header = "Accept-Encoding"
   		value  = "application/xml"
-  	},
-  	{
-  		header = "Authorization",
-  		value  = "Bearer bb74fe7b-b9f2-48bd-9445-bdc60e1edc6a",
+  	}
+  	headers {
+  		header = "Authorization"
+  		value  = "Bearer bb74fe7b-b9f2-48bd-9445-bdc60e1edc6a"
 	}
-  ]
+  
 
-  auth = {
+  auth {
 	username  = "user"
 	auth_type = "basic"
 	password  = "password1"
@@ -296,10 +293,10 @@ resource "runscope_step" "main_page" {
 
   scripts = [
     "log(\"script 1\");",
-    "log(\"script 2\");"
+    "log(\"script 2\");",
   ]
   before_scripts = [
-    "log(\"before script\");"
+    "log(\"before script\");",
   ]
 }
 
@@ -325,8 +322,8 @@ resource "runscope_step" "step_a" {
   method         = "GET"
 }
 resource "runscope_step" "step_b" {
-  bucket_id      = "${runscope_bucket.bucket.id}"c
-  test_id        = "${runscope_test.test_a.id}"
+  bucket_id      = runscope_bucket.bucket.id
+  test_id        = runscope_test.test_a.id
   step_type      = "request"
   note           = "Multiple step test, test b"
   url            = "http://step_b.com"
@@ -335,7 +332,7 @@ resource "runscope_step" "step_b" {
 }
 
 resource "runscope_test" "test_a" {
-  bucket_id   = "${runscope_bucket.bucket.id}"
+  bucket_id   = runscope_bucket.bucket.id
   name        = "runscope test a"
   description = "This is a test a"
 }

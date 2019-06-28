@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
-	"sync"
 
 	"github.com/hashicorp/go-cleanhttp"
+	"io/ioutil"
+	"strings"
+	"sync"
 )
 
 // APIURL is the default runscope api uri
@@ -41,6 +41,7 @@ type ClientAPI interface {
 	ReadSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
 	ReadSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
 	ReadTest(test *Test) (*Test, error)
+	ReadTestMetrics(test *Test, input *ReadMetricsInput) (*TestMetric, error)
 	ReadTestEnvironment(environment *Environment, test *Test) (*Environment, error)
 	ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
 	UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)

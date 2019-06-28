@@ -16,12 +16,12 @@ that you can with other runscope resources.
 ```hcl
 data "runscope_integration" "pagerduty" {
   team_uuid = "d26553c0-3537-40a8-9d3c-64b0453262a9"
-  type = "pagerduty"
+  type      = "pagerduty"
 }
 
 resource "runscope_environment" "environment" {
-  bucket_id    = "${runscope_bucket.bucket.id}"
-  name         = "test-environment"
+  bucket_id = "${runscope_bucket.bucket.id}"
+  name      = "test-environment"
 
   integrations = [
     {

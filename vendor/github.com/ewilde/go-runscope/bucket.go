@@ -146,17 +146,17 @@ func (client *Client) ListAllTests(input *ListTestsInput) ([]*Test, error) {
 		BucketKey: input.BucketKey,
 		Count:     input.Count,
 	}
-	
+
 	if cfg.Count == 0 {
 		cfg.Count = DefaultPageSize
 	}
-	
+
 	for cfg.Offset = 0; ; cfg.Offset += cfg.Count {
 		tests, err := client.ListTests(cfg)
 		if err != nil {
 			return allTests, err
 		}
-		
+
 		allTests = append(allTests, tests...)
 		if len(tests) < cfg.Count {
 			return allTests, nil

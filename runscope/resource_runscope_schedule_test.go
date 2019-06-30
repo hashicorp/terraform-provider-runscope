@@ -111,8 +111,8 @@ resource "runscope_environment" "environment" {
   bucket_id = "${runscope_bucket.bucket.id}"
   name      = "test-environment"
 
-  initial_variables {
-    var1 = "true",
+  initial_variables = {
+    var1 = "true"
     var2 = "value2"
   }
 }

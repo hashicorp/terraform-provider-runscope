@@ -47,11 +47,9 @@ resource "runscope_bucket" "test" {
 	name = "integration-test-bucket"
 }
 data "runscope_buckets" "test" {
-	filter = [
-		{
+	filter {
 			name = "name"
 			values = ["${runscope_bucket.test.name}"]
 		}
-	]
 }
 `

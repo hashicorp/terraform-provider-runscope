@@ -16,67 +16,64 @@ your tests like pauses and conditions.
 ### Creating a step
 ```hcl
 resource "runscope_step" "main_page" {
-  bucket_id      = "${runscope_bucket.bucket.id}"
-  test_id        = "${runscope_test.test.id}"
-  step_type      = "request"
-  url            = "http://example.com"
-  note           = "A comment for the test step"
-  method         = "GET"
-  variables      = [
-  	{
-  	   name     = "httpStatus"
-  	   source   = "response_status"
-  	},
-  	{
-  	   name     = "httpContentEncoding"
-  	   source   = "response_header"
-  	   property = "Content-Encoding"
-  	},
-  ]
-  assertions     = [
-  	{
-  	   source     = "response_status"
-       comparison = "equal_number"
-       value      = "200"
-  	},
-  	{
-  	   source     = "response_json"
-       comparison = "equal"
-       value      = "c5baeb4a-2379-478a-9cda-1b671de77cf9",
-       property   = "data.id"
-  	},
-  ],
-  auth = {
-       username  = "myUsername"
-       auth_type = "basic"
-       password  = "myPassword"
-  },
-  before_scripts  = [<<EOF
+  bucket_id = "${runscope_bucket.bucket.id}"
+  test_id   = "${runscope_test.test.id}"
+  step_type = "request"
+  url       = "http://example.com"
+  note      = "A comment for the test step"
+  method    = "GET"
+  variables {
+    name   = "httpStatus"
+    source = "response_status"
+  }
+  variables {
+    name     = "httpContentEncoding"
+    source   = "response_header"
+    property = "Content-Encoding"
+  }
+
+  assertions {
+    source     = "response_status"
+    comparison = "equal_number"
+    value      = "200"
+  }
+  assertions {
+    source     = "response_json"
+    comparison = "equal"
+    value      = "c5baeb4a-2379-478a-9cda-1b671de77cf9"
+    property   = "data.id"
+  }
+
+  auth {
+    username  = "myUsername"
+    auth_type = "basic"
+    password  = "myPassword"
+  }
+  before_scripts = [<<EOF
        var endVar = new Date();
        var startVar = new Date(); 
        alert('this is a multi-line before script')
     EOF
-  ],
-  scripts        = [<<EOF
+  ]
+  scripts = [<<EOF
        var endVar = new Date();
        var startVar = new Date();
        alert('this is a multi-line after script')
     EOF
-  ],
-  headers        = [
-  	{
-  		header = "Accept-Encoding",
-  		value  = "application/json"
-  	},
-  	{
-  		header = "Accept-Encoding",
-  		value  = "application/xml"
-  	},
-  	{
-  		header = "Authorization",
-  		value  = "Bearer bb74fe7b-b9f2-48bd-9445-bdc60e1edc6a",
-	}
   ]
+  headers {
+    header = "Accept-Encoding"
+    value  = "application/json"
+  }
+  headers {
+    header = "Accept-Encoding"
+    value  = "application/xml"
+  }
+  headers {
+    header = "Authorization"
+    value  = "Bearer bb74fe7b-b9f2-48bd-9445-bdc60e1edc6a"
+  }
+
 }
 
 resource "runscope_test" "test" {

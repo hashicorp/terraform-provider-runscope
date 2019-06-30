@@ -177,22 +177,21 @@ resource "runscope_environment" "environmentA" {
   name         = "test-environment"
 
   integrations = [
-		"${data.runscope_integration.slack.id}"
+		"${data.runscope_integration.slack.id}",
   ]
 
-  initial_variables {
-    var1 = "true",
+  initial_variables = {
+    var1 = "true"
     var2 = "value2"
   }
 
 	regions = ["us1", "eu1"]
 	
-	remote_agents = [
-		{
+	remote_agents {
 			name = "test agent"
 			uuid = "arbitrary-string"
 		}
-	]
+	
 
 	retry_on_failure = true
 	webhooks = ["https://example.com"]
@@ -223,37 +222,34 @@ resource "runscope_environment" "environmentA" {
 		"${data.runscope_integration.slack.id}"
   ]
 
-  initial_variables {
-    var1 = "true",
+  initial_variables = {
+    var1 = "true"
     var2 = "value2"
   }
 
-	regions = ["us1", "eu1"]
+  regions = ["us1", "eu1"]
 	
-	remote_agents = [
-		{
+	remote_agents {
 			name = "test agent"
 			uuid = "arbitrary-string"
 		}
-	]
 
 	retry_on_failure = true
 	webhooks = ["https://example.com"]
-	emails = {
+	emails {
 	  notify_all       = true
       notify_on        = "all"
       notify_threshold = 1
 
-      recipients = [
-      	{
+      recipients {
       		name = "marek"
       		email = "marekpastierik15@gmail.com"
-      	},
-      	{
+      	}
+      	recipients {
       		name = "bob"
       		email = "bob@gmail.com"
-      	},
-      ]
+      	}
+      
 	}
 }
 
@@ -283,19 +279,18 @@ resource "runscope_environment" "environmentB" {
 		"${data.runscope_integration.slack.id}"
   ]
 
-  initial_variables {
-    var1 = "true",
+  initial_variables = {
+    var1 = "true"
     var2 = "value2"
   }
 
   regions = ["us1", "eu1"]
 	
-  remote_agents = [
-    {
+  remote_agents {
       name = "test agent"
 	  uuid = "arbitrary-string"
 	}
-  ]
+  
 
 	retry_on_failure = true
 	webhooks = ["https://example.com"]

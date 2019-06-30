@@ -15,11 +15,11 @@ that you can use with other runscope resources.
 
 ```hcl
 data "runscope_integrations" "slack" {
-	team_uuid = "d26553c0-3537-40a8-9d3c-64b0453262a9"
-	filter = {
-		name = "type"
-		values = ["slack"]
-	}
+  team_uuid = "d26553c0-3537-40a8-9d3c-64b0453262a9"
+  filter = {
+    name   = "type"
+    values = ["slack"]
+  }
 }
 ```
 

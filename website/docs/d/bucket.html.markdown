@@ -15,12 +15,12 @@ that you can use with other runscope resources.
 
 ```hcl
 data "runscope_bucket" "website" {
-	key = "t2f4bkvnggct"
+  key = "t2f4bkvnggct"
 }
 
 resource "runscope_environment" "environment" {
-	bucket_id = "${runscope_bucket.website.id}"
-	name      = "test-environment"
+  bucket_id = "${runscope_bucket.website.id}"
+  name      = "test-environment"
 }
 ```
 

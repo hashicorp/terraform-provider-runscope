@@ -15,12 +15,12 @@ that you can use with other runscope resources.
 
 ```hcl
 data "runscope_buckets" "buckets" {
-	filter = [
-		{
-			name = "name"
-			values = ["test-bucket"]
-		}
-	]
+  filter = [
+    {
+      name   = "name"
+      values = ["test-bucket"]
+    }
+  ]
 }
 ```
 

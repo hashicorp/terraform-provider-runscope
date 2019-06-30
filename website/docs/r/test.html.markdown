@@ -18,15 +18,15 @@ a collection of [test steps](step.html) and an
 ```hcl
 # Add a test to a bucket
 resource "runscope_test" "api" {
-  name         = "api-test"
-  description  = "checks the api is up and running"
-  bucket_id    = "${runscope_bucket.main}"
+  name        = "api-test"
+  description = "checks the api is up and running"
+  bucket_id   = "${runscope_bucket.main}"
 }
 
 # Create a bucket
 resource "runscope_bucket" "main" {
-  name         = "terraform-ftw"
-  team_uuid    = "870ed937-bc6e-4d8b-a9a5-d7f9f2412fa3"
+  name      = "terraform-ftw"
+  team_uuid = "870ed937-bc6e-4d8b-a9a5-d7f9f2412fa3"
 }
 ```
 

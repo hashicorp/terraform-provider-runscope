@@ -20,7 +20,7 @@ a collection of [test steps](step.html) and an
 resource "runscope_test" "api" {
   name        = "api-test"
   description = "checks the api is up and running"
-  bucket_id   = "${runscope_bucket.main}"
+  bucket_id   = "${runscope_bucket.main.id}"
 }
 
 # Create a bucket

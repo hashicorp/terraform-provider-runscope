@@ -1,5 +1,7 @@
 module github.com/terraform-providers/terraform-provider-runscope
 
+go 1.14
+
 require (
 	github.com/ewilde/go-runscope v0.0.0-20190103115619-2adee83e99fe
 	github.com/hashicorp/hcl v1.0.0 // indirect

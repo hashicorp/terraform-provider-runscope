@@ -37,7 +37,7 @@ The following arguments are supported:
 * `name` - (String, Required) The name of this test.
 * `description` - (String, Optional) Human-readable description of the new test.
   is being created for.
-
+* `default_environment_id` - (String, Optional) ID of an environment to set as default for test steps
 ## Attributes Reference
 
 The following attributes are exported:
@@ -45,3 +45,4 @@ The following attributes are exported:
 * `id` - The unique identifier for the test.
 * `name` - The name of this test.
 * `description` - Human-readable description of the new test.
+* `default_environment_id` - ID of the default environment

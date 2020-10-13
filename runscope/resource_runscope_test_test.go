@@ -82,10 +82,37 @@ func testAccCheckTestExists(n string, test *runscope.Test) resource.TestCheckFun
 }
 
 const testRunscopeTestConfigA = `
+resource "runscope_environment" "environmentA" {
+  bucket_id    = "${runscope_bucket.bucket.id}"
+  name         = "test-environment"
+
+  integrations = [
+		"${data.runscope_integration.slack.id}"
+  ]
+
+  initial_variables {
+    var1 = "true",
+    var2 = "value2"
+  }
+
+	regions = ["us1", "eu1"]
+
+	remote_agents = [
+		{
+			name = "test agent"
+			uuid = "arbitrary-string"
+		}
+	]
+
+	retry_on_failure = true
+	webhooks = ["https://example.com"]
+}
+
 resource "runscope_test" "test" {
   bucket_id = "${runscope_bucket.bucket.id}"
   name = "runscope test"
   description = "This is a test test..."
+  default_environment_id = "${runscope_environment.environmentA.id}"
 }
 
 resource "runscope_bucket" "bucket" {

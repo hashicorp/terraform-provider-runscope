@@ -1,9 +1,9 @@
 package runscope
 
 import (
-  "fmt"
+	"fmt"
 	"log"
-  "strings"
+	"strings"
 
 	runscope "github.com/ewilde/go-runscope"
 )
@@ -16,7 +16,7 @@ type config struct {
 
 func (c *config) client() (*runscope.Client, error) {
 	client := runscope.NewClient(c.APIURL, c.AccessToken)
-  runscope.RegisterLogHandlers(levelLogHandler("DEBUG"), levelLogHandler("INFO"), levelLogHandler("ERROR"))
+	runscope.RegisterLogHandlers(levelLogHandler("DEBUG"), levelLogHandler("INFO"), levelLogHandler("ERROR"))
 
 	log.Printf("[INFO] runscope client configured for server %s", c.APIURL)
 

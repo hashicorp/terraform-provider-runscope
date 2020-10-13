@@ -37,7 +37,7 @@ func resourceRunscopeTest() *schema.Resource {
 			},
 			"default_environment_id": {
 				Type:     schema.TypeString,
-				Computed: false,
+				Optional: true,
 			},
 		},
 	}
